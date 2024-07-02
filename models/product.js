@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   product.init({
+    productId: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -89,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    specId: {
+    productSpecId: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -101,27 +106,15 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    specAmount: {
+    specAlarmAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '商品规格数量必须存在'
+          msg: '商品预警数量必须存在'
         },
         notEmpty: {
-          msg: '商品规格数量不能为空'
-        }
-      }
-    },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '商品价格必须存在'
-        },
-        notEmpty: {
-          msg: '商品价格不能为空'
+          msg: '商品预警数量不能为空'
         }
       }
     },

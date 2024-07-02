@@ -32,15 +32,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      specId: {
+      productSpecId: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      specAmount: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        allowNull: false
-      },
-      price: {
+      stockAlarmAmount: {
         type: Sequelize.TINYINT.UNSIGNED,
         allowNull: false
       },
