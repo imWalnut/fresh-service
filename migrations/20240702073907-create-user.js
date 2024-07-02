@@ -25,10 +25,6 @@ module.exports = {
         defaultValue: 0,
         type: Sequelize.TINYINT.UNSIGNED
       },
-      birthDay: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       address: {
         type: Sequelize.STRING,
         allowNull: false
@@ -52,6 +48,7 @@ module.exports = {
       },
       avatar: {
         type: Sequelize.STRING,
+        defaultValue: 'https://img1.baidu.com/it/u=3901926037,642800703&fm=253&fmt=auto&app=138&f=JPEG?w=486&h=486',
         allowNull: false
       },
       remark: {

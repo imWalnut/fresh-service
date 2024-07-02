@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const bcrypt = require('bcryptjs');
+
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -68,34 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     sex: {
       type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '性别必须存在。'
-        },
-        notEmpty: {
-          msg: '性别不能为空。'
-        },
-        isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"
-        }
-      }
-    },
-    birthDay: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '生日必须存在。'
-        },
-        notEmpty: {
-          msg: '生日不能为空。'
-        },
-        isDate: {
-          msg: "日期格式错误"
-        }
-      }
+      allowNull: true
     },
     address: {
       type: DataTypes.STRING,
@@ -115,19 +90,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '角色必须存在。'
-        },
-        notEmpty: {
-          msg: '角色不能为空。'
-        },
-        isIn: {
-          args: [[0, 1, 2]],
-          msg: "只能为0，1，2"
-        }
-      }
+      allowNull: true
     },
     inviteBy: {
       type: DataTypes.STRING,
@@ -143,9 +106,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: '密码不能为空。'
         },
-        is: {
-          args: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
-          msg: "密码必须包含至少一个大写字母、一个小写字母、一个数字，可以包含特殊字符"
+        set(value) {
+          let validate = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/
+          if (validate) {
+            this.setDataValue('password', bcrypt.hashSync(value, 10))
+          } else {
+            throw  new Error('密码必须包含至少一个大写字母、一个小写字母、一个数字，可以包含特殊字符')
+          }
         }
       }
     },
@@ -161,7 +128,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         len: {
           args: [4, 12],
-          msg: '地址长度需要在4 ~ 12个字符之间。'
+          msg: '用户名需要在4 ~ 12个字符之间。'
         }
       }
     },
@@ -175,19 +142,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '状态必须存在。'
-        },
-        notEmpty: {
-          msg: '状态不能为空。'
-        },
-        isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"
-        }
-      }
+      allowNull: true
     },
   }, {
     sequelize,
