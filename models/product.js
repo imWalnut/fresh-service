@@ -1,0 +1,178 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class product extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  product.init({
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品名称必须存在'
+        },
+        notEmpty: {
+          msg: '商品名称不能为空'
+        },
+        len: {
+          args: [1, 50],
+          msg: '姓名长度需要在1 ~ 50个字符之间'
+        }
+      }
+    },
+    images: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品主图必须存在'
+        },
+        notEmpty: {
+          msg: '商品主图不能为空'
+        },
+        isUrl: {
+          msg: "图片地址格式错误"
+        }
+      }
+    },
+    productCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品编码必须存在'
+        },
+        notEmpty: {
+          msg: '商品编码不能为空'
+        },
+        len: {
+          args: [8, 20],
+          msg: '姓名长度需要在8 ~ 20个字符之间'
+        }
+      }
+    },
+    categoryId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品分类必须存在'
+        },
+        notEmpty: {
+          msg: '商品分类不能为空'
+        }
+      }
+    },
+    groupId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品分组必须存在'
+        },
+        notEmpty: {
+          msg: '商品分组不能为空'
+        }
+      }
+    },
+    specId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品规格必须存在'
+        },
+        notEmpty: {
+          msg: '商品规格不能为空'
+        }
+      }
+    },
+    specAmount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品规格数量必须存在'
+        },
+        notEmpty: {
+          msg: '商品规格数量不能为空'
+        }
+      }
+    },
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品价格必须存在'
+        },
+        notEmpty: {
+          msg: '商品价格不能为空'
+        }
+      }
+    },
+    stockAmount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '库存数量必须存在'
+        },
+        notEmpty: {
+          msg: '库存数量不能为空'
+        }
+      }
+    },
+    soldAmount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        notNull: {
+          msg: '已售数量必须存在'
+        },
+        notEmpty: {
+          msg: '已售数量不能为空'
+        }
+      }
+    },
+    status: {
+      type: DataTypes.TINYINT.UNSIGNED,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '状态必须存在。'
+        },
+        notEmpty: {
+          msg: '状态不能为空。'
+        },
+        isIn: {
+          args: [[0, 1, 2, 3]],
+          msg: "只能为0，1，2，3"
+        }
+      }
+    },
+    remark: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+  }, {
+    sequelize,
+    modelName: 'product',
+  });
+  return product;
+};
