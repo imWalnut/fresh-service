@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class group extends Model {
+  class order extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,23 +13,28 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  group.init({
-    name: {
+  order.init({
+    orderNo: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '分组名称必须存在。'
-        },
-        notEmpty: {
-          msg: '分组名称不能为空。'
-        },
-        len: {
-          args: [1, 20],
-          msg: '分组名称长度需要在1 ~ 20个字符之间。'
-        }
-      }
+      allowNull: false
     },
+    userId: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    userCouponId: DataTypes.STRING,
+    paymentType: DataTypes.INTEGER,
+    payment: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    postage: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    sendTime: DataTypes.DATE,
+    endTime: DataTypes.DATE,
+    closeTime: DataTypes.DATE,
     status: {
       type: DataTypes.TINYINT.UNSIGNED,
       allowNull: false,
@@ -41,18 +46,14 @@ module.exports = (sequelize, DataTypes) => {
           msg: '状态不能为空。'
         },
         isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"
+          args: [[0, 1, 2, 3, 4, 5]],
+          msg: "只能为0，1, 2, 3, 4, 5"
         }
       }
     },
-    remark: {
-      type: DataTypes.STRING,
-      allowNull: true
-    }
   }, {
     sequelize,
-    modelName: 'group',
+    modelName: 'order',
   });
-  return group;
+  return order;
 };

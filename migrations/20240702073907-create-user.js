@@ -3,10 +3,11 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
-      userId: {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.BIGINT
       },
       phoneNumber: {
         type: Sequelize.STRING,
@@ -49,6 +50,15 @@ module.exports = {
       avatar: {
         type: Sequelize.STRING,
         defaultValue: 'https://img1.baidu.com/it/u=3901926037,642800703&fm=253&fmt=auto&app=138&f=JPEG?w=486&h=486',
+        allowNull: false
+      },
+      images: {
+        type: Sequelize.STRING(1000),
+        defaultValue: 'https://img1.baidu.com/it/u=3901926037,642800703&fm=253&fmt=auto&app=138&f=JPEG?w=486&h=486',
+        allowNull: false
+      },
+      shopName: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       remark: {

@@ -3,10 +3,11 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('productSpecs', {
-      productSpecId: {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.BIGINT
       },
       productId: {
         type: Sequelize.STRING,
@@ -25,11 +26,11 @@ module.exports = {
         allowNull: false
       },
       specAmount: {
-        type: Sequelize.TINYINT.UNSIGNED,
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       price: {
-        type: Sequelize.TINYINT.UNSIGNED,
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {

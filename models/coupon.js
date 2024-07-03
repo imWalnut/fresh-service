@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   coupon.init({
-    couponId: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,

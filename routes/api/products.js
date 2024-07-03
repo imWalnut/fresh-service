@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {product} = require('../../models')
+const {product, productSpec} = require('../../models')
 const {Op} = require('sequelize')
-const {
-    NotFoundError,
-    success,
-    failure
-} = require('../../utils/response')
+const { NotFoundError } = require('../../utils/errors');
+const { success, failure } = require('../../utils/responses');
+
+const { DataTypes } = require('sequelize');
 
 /**
  * 公共方法：白名单过滤
@@ -16,11 +15,43 @@ const {
 function filterBody(req) {
     return {
         name: req.body.name,
-        image: req.body.image,
-        code: req.body.code,
-        classify: req.body.classify,
-        group: req.body.group,
+        subImages: req.body.subImages,
+        mainImage: req.body.mainImage,
+        productCode: req.body.productCode,
+        categoryId: req.body.categoryId,
+        groupId: req.body.groupId,
+        stockAlarmAmount: req.body.stockAlarmAmount,
+        stockAmount: req.body.stockAmount,
+        soldAmount: req.body.soldAmount,
+        status: req.body.status,
         remark: req.body.remark
+    }
+}
+
+function filterSpecBody(req) {
+    return {
+        productId: req.productId,
+        specId: req.specId,
+        specAmount: req.specAmount,
+        remark: req.remark,
+        status: req.status,
+        price: req.price
+    }
+}
+
+/**
+ * 公共方法：关联分类、用户数据
+ * @returns {{include: [{as: string, attributes: string[]}], attributes: {exclude: string[]}}}
+ */
+function getCondition() {
+    return {
+        include: [
+            {
+                model: productSpec,
+                as: 'productSpecList',
+                attributes: ['id', 'status', 'specId', 'specAmount', 'price']
+            }
+        ]
     }
 }
 
@@ -31,8 +62,10 @@ async function getProductInfo(req) {
     // 获取商品 ID
     const {id} = req.params;
 
+    const condition = getCondition();
+
     // 查询商品
-    const productInfo = await product.findByPk(id);
+    const productInfo = await product.findByPk(id, condition);
 
     // 如果没有找到，就抛出异常
     if (!productInfo) {
@@ -50,7 +83,8 @@ async function getProductInfo(req) {
 router.get('/getProductsList/', async function (req, res, next) {
     try {
         const condition = {
-            order: [['name', 'DESC']]
+            ...getCondition(),
+            order: [['createdAt', 'DESC']]
         }
         const Products = await product.findAll(condition)
         success(res, '查询商品列表成功。', Products);
@@ -71,9 +105,11 @@ router.get('/getProductsListByPage/', async function (req, res, next) {
         const pageSize = Math.abs(Number(query.pageSize)) || 10
         const offset = (currentPage - 1) * pageSize
         const condition = {
-            order: [['name', 'DESC']],
+            ...getCondition(),
+            order: [['createdAt', 'DESC']],
             limit: pageSize,
-            offset: offset
+            offset: offset,
+            distinct: true
         }
 
         // 姓名模糊查询
@@ -118,8 +154,24 @@ router.get('/getProductInfo/:id', async function (req, res, next) {
 router.post('/addProductInfo/', async function (req, res, next) {
     try {
         const body = filterBody(req)
+        const specList = eval(req.body.productSpecList)
+        if (!specList || !specList.length) {
+            return res.status(400).json({
+                status: false,
+                message: '商品规格不能为空。',
+            });
+        }
         const productInfo = await product.create(body)
-        success(res, '新增商品成功', {productInfo}, 201);
+        const specBody = specList.map(item => {
+            item.productId = productInfo.id
+            return filterSpecBody(item)
+        })
+        const fields = Object.keys(specBody[0])
+        await productSpec.bulkCreate(specBody, {
+            ignoreDuplicates: true,
+            fields: fields
+        })
+        success(res, '新增商品成功', {}, 201);
     } catch (err) {
         failure(res, err)
     }
@@ -132,6 +184,7 @@ router.post('/addProductInfo/', async function (req, res, next) {
 router.delete('/deleteProductInfo/:id', async function (req, res, next) {
     try {
         const productInfo = await getProductInfo(req);
+        await productSpec.destroy({ where: { productId: req.params.id } });
         await productInfo.destroy()
         success(res, '删除商品成功');
     } catch (err) {
@@ -145,10 +198,31 @@ router.delete('/deleteProductInfo/:id', async function (req, res, next) {
  */
 router.put('/updateProductInfo/:id', async function (req, res, next) {
     try {
+        const specList = eval(req.body.productSpecList)
+        if (!specList || !specList.length) {
+            return res.status(400).json({
+                status: false,
+                message: '商品规格不能为空。',
+            });
+        }
+        await productSpec.destroy({
+            where: {
+                productId: req.params.id
+            }
+        });
+        const specBody = specList.map(item => {
+            item.productId = req.params.id
+            return filterSpecBody(item)
+        })
+        const fields = Object.keys(specBody[0])
+        await productSpec.bulkCreate(specBody, {
+            updateOnDuplicate: fields.filter((item) => item !== 'id'),
+            fields: fields
+        })
         const productInfo = await getProductInfo(req);
         const body = filterBody(req)
         await productInfo.update(body)
-        success(res, '更新商品成功', {productInfo})
+        success(res, '更新商品成功', {})
     } catch (err) {
         failure(res, err)
     }

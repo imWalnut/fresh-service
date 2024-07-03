@@ -2,40 +2,46 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('userCoupons', {
+    await queryInterface.createTable('orders', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT
       },
+      orderNo: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       userId: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      couponId: {
-        type: Sequelize.STRING,
+      userCouponId: {
+        type: Sequelize.STRING
+      },
+      paymentType: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      payment: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
-      role: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: '角色必须存在。'
-          },
-          notEmpty: {
-            msg: '角色不能为空。'
-          },
-          isIn: {
-            args: [[0, 1, 2]],
-            msg: "只能为0，1，2"
-          }
-        }
+      postage: {
+        type: Sequelize.INTEGER
       },
-      endDate: {
-        type: Sequelize.DATE,
-        allowNull: false
+      sendTime: {
+        type: Sequelize.DATE
+      },
+      closeTime: {
+        type: Sequelize.DATE
+      },
+      endTime: {
+        type: Sequelize.DATE
+      },
+      status: {
+        type: Sequelize.TINYINT.UNSIGNED
       },
       createdAt: {
         allowNull: false,
@@ -48,6 +54,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('userCoupons');
+    await queryInterface.dropTable('orders');
   }
 };

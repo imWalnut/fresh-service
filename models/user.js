@@ -16,11 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   user.init({
-    userId: {
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
-    },
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -135,6 +130,34 @@ module.exports = (sequelize, DataTypes) => {
     avatar: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    images: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '门店照片必须存在。'
+        },
+        notEmpty: {
+          msg: '门店照片不能为空。'
+        }
+      }
+    },
+    shopName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '门店地址必须存在。'
+        },
+        notEmpty: {
+          msg: '门店地址不能为空。'
+        },
+        len: {
+          args: [1, 20],
+          msg: '用户名需要在1 ~ 20个字符之间。'
+        }
+      }
     },
     remark: {
       type: DataTypes.STRING,

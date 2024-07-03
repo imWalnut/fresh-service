@@ -2,23 +2,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('specs', {
+    await queryInterface.createTable('carts', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      name: {
+      productId: {
         type: Sequelize.STRING,
+        allowNull: false
+      },
+      userId: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      totalPrice: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      quantity: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       status: {
         type: Sequelize.TINYINT.UNSIGNED,
+        defaultValue: 0,
         allowNull: false
-      },
-      remark: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -29,13 +39,9 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addIndex(
-        'specs', {
-          fields: ['name'],  // 要索引的字段
-          unique: true        // 唯一索引
-        });
+
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('specs');
+    await queryInterface.dropTable('carts');
   }
 };

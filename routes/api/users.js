@@ -2,11 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {user} = require('../../models')
 const {Op} = require('sequelize')
-const {
-    NotFoundError,
-    success,
-    failure
-} = require('../../utils/response')
+const { NotFoundError } = require('../../utils/errors');
+const { success, failure } = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
@@ -15,13 +12,20 @@ const {
  */
 function filterBody(req) {
     return {
-        name: req.body.name,
-        address: req.body.address,
+        phoneNumber: req.body.phoneNumber,
         email: req.body.email,
+        name: req.body.name,
+        sex: req.body.sex,
+        address: req.body.address,
+        role: req.body.role,
+        inviteBy: req.body.inviteBy,
         password: req.body.password,
         userName: req.body.userName,
-        idNumber: req.body.idNumber,
-        phoneNumber: req.body.phoneNumber,
+        avatar: req.body.avatar,
+        images: req.body.images,
+        shopName: req.body.shopName,
+        remark: req.body.remark,
+        status: req.body.status
     }
 }
 

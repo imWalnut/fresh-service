@@ -3,21 +3,22 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('products', {
-      productId: {
+      id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.BIGINT
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      images: {
+      subImages: {
         type: Sequelize.STRING,
         allowNull: true
       },
-      avatar: {
-        type: Sequelize.STRING,
+      mainImage: {
+        type: Sequelize.STRING(1000),
         allowNull: false
       },
       productCode: {
@@ -32,20 +33,19 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      productSpecId: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       stockAlarmAmount: {
-        type: Sequelize.TINYINT.UNSIGNED,
+        type: Sequelize.INTEGER,
+        defaultValue: 100,
         allowNull: false
       },
       stockAmount: {
-        type: Sequelize.TINYINT.UNSIGNED,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
         allowNull: false
       },
       soldAmount: {
-        type: Sequelize.TINYINT.UNSIGNED,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
         allowNull: false
       },
       status: {

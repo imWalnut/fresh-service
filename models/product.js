@@ -10,15 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.product.hasMany(models.productSpec, {foreignKey: 'productId', as: 'productSpecList'});
     }
   }
   product.init({
-    productId: {
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -31,15 +26,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         len: {
           args: [1, 50],
-          msg: '姓名长度需要在1 ~ 50个字符之间'
+          msg: '商品名称长度需要在1 ~ 50个字符之间'
         }
       }
     },
-    images: {
+    subImages: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    avatar: {
+    mainImage: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -66,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         len: {
           args: [8, 20],
-          msg: '姓名长度需要在8 ~ 20个字符之间'
+          msg: '商品编码长度需要在8 ~ 20个字符之间'
         }
       }
     },
@@ -94,19 +89,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    productSpecId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '商品规格必须存在'
-        },
-        notEmpty: {
-          msg: '商品规格不能为空'
-        }
-      }
-    },
-    specAlarmAmount: {
+    stockAlarmAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
