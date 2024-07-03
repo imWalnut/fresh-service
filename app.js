@@ -2,6 +2,8 @@ let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
+const adminAuth = require('./middlewares/admin-auth');
+require('dotenv').config();
 
 let indexRouter = require('./routes/index');
 let apiUsersRouter = require('./routes/api/users');
@@ -17,8 +19,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/users', apiUsersRouter);
-app.use('/api/products', apiProductsRouter);
+app.use('/api/users', adminAuth, apiUsersRouter);
+app.use('/api/products', adminAuth, apiProductsRouter);
 app.use('/api/auth', apiAuthRouter);
 
 module.exports = app;

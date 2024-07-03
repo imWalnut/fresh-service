@@ -5,8 +5,6 @@ const {Op} = require('sequelize')
 const { NotFoundError } = require('../../utils/errors');
 const { success, failure } = require('../../utils/responses');
 
-const { DataTypes } = require('sequelize');
-
 /**
  * 公共方法：白名单过滤
  * @param req
@@ -40,7 +38,7 @@ function filterSpecBody(req) {
 }
 
 /**
- * 公共方法：关联分类、用户数据
+ * 公共方法：关联商品、商品规格
  * @returns {{include: [{as: string, attributes: string[]}], attributes: {exclude: string[]}}}
  */
 function getCondition() {
@@ -86,8 +84,8 @@ router.get('/getProductsList/', async function (req, res, next) {
             ...getCondition(),
             order: [['createdAt', 'DESC']]
         }
-        const Products = await product.findAll(condition)
-        success(res, '查询商品列表成功。', Products);
+        const products = await product.findAll(condition)
+        success(res, '查询商品列表成功。', products);
     } catch (err) {
         failure(res, err)
     }
@@ -109,14 +107,31 @@ router.get('/getProductsListByPage/', async function (req, res, next) {
             order: [['createdAt', 'DESC']],
             limit: pageSize,
             offset: offset,
+            where: {},
             distinct: true
         }
 
-        // 姓名模糊查询
+        // 名称模糊查询
         if (query.name) {
             condition.where = {
                 name: {
                     [Op.like]: `%${query.name}%`
+                }
+            }
+        }
+
+        if (query.categoryId) {
+            condition.where = {
+                categoryId: {
+                    [Op.eq]: query.categoryId
+                }
+            }
+        }
+
+        if (query.groupId) {
+            condition.where = {
+                groupId: {
+                    [Op.eq]: query.groupId
                 }
             }
         }
@@ -171,7 +186,7 @@ router.post('/addProductInfo/', async function (req, res, next) {
             ignoreDuplicates: true,
             fields: fields
         })
-        success(res, '新增商品成功', {}, 201);
+        success(res, '新增商品成功', {id: productInfo.id}, 201);
     } catch (err) {
         failure(res, err)
     }
@@ -222,7 +237,7 @@ router.put('/updateProductInfo/:id', async function (req, res, next) {
         const productInfo = await getProductInfo(req);
         const body = filterBody(req)
         await productInfo.update(body)
-        success(res, '更新商品成功', {})
+        success(res, '更新商品成功', {id: productInfo.id})
     } catch (err) {
         failure(res, err)
     }

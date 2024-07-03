@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {user} = require('../../models')
 const {Op} = require('sequelize')
-const { NotFoundError } = require('../../utils/errors');
-const { success, failure } = require('../../utils/responses');
+const {NotFoundError} = require('../../utils/errors');
+const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
@@ -55,7 +55,7 @@ async function getUserInfo(req) {
 router.get('/getUsersList/', async function (req, res, next) {
     try {
         const condition = {
-            order: [['name', 'DESC']]
+            order: [['createdAt', 'DESC']]
         }
         const users = await user.findAll(condition)
         success(res, '查询用户列表成功。', users);
@@ -76,18 +76,35 @@ router.get('/getUsersListByPage/', async function (req, res, next) {
         const pageSize = Math.abs(Number(query.pageSize)) || 10
         const offset = (currentPage - 1) * pageSize
         const condition = {
-            order: [['name', 'DESC']],
+            order: [['createdAt', 'DESC']],
             limit: pageSize,
-            offset: offset
+            offset: offset,
+            where: {}
         }
 
-        // 姓名模糊查询
-        if (query.name) {
+        // 模糊查询
+        if (query.userName) {
             condition.where = {
-                name: {
-                    [Op.like]: `%${query.name}%`
+                userName: {
+                    [Op.like]: `%${query.userName}%`
                 }
-            }
+            };
+        }
+
+        if (query.email) {
+            condition.where = {
+                email: {
+                    [Op.eq]: query.email
+                }
+            };
+        }
+
+        if (query.phoneNumber) {
+            condition.where = {
+                phoneNumber: {
+                    [Op.eq]: query.phoneNumber
+                }
+            };
         }
         const {count, rows} = await user.findAndCountAll(condition)
         success(res, '查询用户列表成功', {
@@ -153,7 +170,7 @@ router.put('/updateUserInfo/:id', async function (req, res, next) {
         const userInfo = await getUserInfo(req);
         const body = filterBody(req)
         await userInfo.update(body)
-        success(res, '更新用户成功', {userInfo})
+        success(res, '更新用户成功', {id: userInfo.id})
     } catch (err) {
         failure(res, err)
     }
