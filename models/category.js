@@ -49,22 +49,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: true,
     },
-    status: {
-      type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '状态必须存在。'
-        },
-        notEmpty: {
-          msg: '状态不能为空。'
-        },
-        isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"
-        }
-      }
-    },
     remark: {
       type: DataTypes.STRING,
       allowNull: true

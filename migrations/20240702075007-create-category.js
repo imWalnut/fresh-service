@@ -18,11 +18,8 @@ module.exports = {
         allowNull: false
       },
       parentId: {
-        type: Sequelize.BIGINT
-      },
-      status: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        allowNull: false
+        type: Sequelize.BIGINT,
+        allowNull: true
       },
       remark: {
         type: Sequelize.STRING

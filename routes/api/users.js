@@ -163,7 +163,7 @@ router.delete('/deleteUserInfo/:id', async function (req, res, next) {
 
 /**
  * 更新用户
- * DELETE /api/users/updateUserInfo:id
+ * PUT /api/users/updateUserInfo:id
  */
 router.put('/updateUserInfo/:id', async function (req, res, next) {
     try {
