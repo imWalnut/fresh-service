@@ -22,11 +22,6 @@ module.exports = async (req, res, next) => {
             throw new UnauthorizedError('用户不存在。')
         }
 
-        // 验证当前用户是否是管理员或销售 0管理员 1销售 2用户
-        if (userInfo.role === 2) {
-            throw new UnauthorizedError('您没有权限使用当前接口。')
-        }
-
         req.user = userInfo
 
         next()

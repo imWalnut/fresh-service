@@ -17,15 +17,15 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      role: {
+      status: {
         type: Sequelize.TINYINT.UNSIGNED,
         allowNull: false,
         validate: {
           notNull: {
-            msg: '角色必须存在。'
+            msg: '状态必须存在'
           },
           notEmpty: {
-            msg: '角色不能为空。'
+            msg: '态不能为空。'
           },
           isIn: {
             args: [[0, 1, 2]],
