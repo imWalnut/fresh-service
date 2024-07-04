@@ -14,11 +14,11 @@ module.exports = {
         allowNull: false
       },
       userId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       userCouponId: {
-        type: Sequelize.STRING
+        type: Sequelize.BIGINT
       },
       paymentType: {
         type: Sequelize.INTEGER,

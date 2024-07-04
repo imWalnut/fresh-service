@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     parentId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: true,
     },
     status: {

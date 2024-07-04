@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       userId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       couponId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       role: {

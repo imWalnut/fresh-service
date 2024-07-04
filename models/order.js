@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    userCouponId: DataTypes.STRING,
+    userCouponId: DataTypes.BIGINT,
     paymentType: DataTypes.INTEGER,
     payment: {
       type: DataTypes.INTEGER,

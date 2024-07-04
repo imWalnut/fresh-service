@@ -1,4 +1,5 @@
 'use strict';
+const {UnauthorizedError} = require("../utils/errors");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -49,8 +50,7 @@ module.exports = {
       },
       avatar: {
         type: Sequelize.STRING,
-        defaultValue: 'https://img1.baidu.com/it/u=3901926037,642800703&fm=253&fmt=auto&app=138&f=JPEG?w=486&h=486',
-        allowNull: false
+        allowNull: true
       },
       images: {
         type: Sequelize.STRING(1000),
@@ -81,7 +81,7 @@ module.exports = {
     await queryInterface.addIndex(
         'users', {
           fields: ['phoneNumber'],  // 要索引的字段
-          unique: true        // 唯一索引
+          unique: true,        // 唯一索引
         });
   },
   async down(queryInterface, Sequelize) {

@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       productId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       status: {
@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       specId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       specAmount: {

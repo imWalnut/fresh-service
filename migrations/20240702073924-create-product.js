@@ -26,11 +26,11 @@ module.exports = {
         allowNull: false
       },
       categoryId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       groupId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       stockAlarmAmount: {

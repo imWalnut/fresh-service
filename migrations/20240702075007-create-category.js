@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       parentId: {
-        type: Sequelize.STRING
+        type: Sequelize.BIGINT
       },
       status: {
         type: Sequelize.TINYINT.UNSIGNED,

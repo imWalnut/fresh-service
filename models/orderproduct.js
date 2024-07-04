@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   orderProduct.init({
     productId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
     orderId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
     totalPrice: {

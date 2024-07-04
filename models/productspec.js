@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
     productSpec.init({
         productId: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: false,
             validate: {
                 notNull: {
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         specId: {
-            type: DataTypes.STRING,
+            type: DataTypes.BIGINT,
             allowNull: false,
             validate: {
                 notNull: {

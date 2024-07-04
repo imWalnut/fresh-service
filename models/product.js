@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     categoryId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false,
       validate: {
         notNull: {
@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     groupId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false,
       validate: {
         notNull: {

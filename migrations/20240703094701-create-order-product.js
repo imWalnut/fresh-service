@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       productId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       orderId: {
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
         allowNull: false
       },
       totalPrice: {

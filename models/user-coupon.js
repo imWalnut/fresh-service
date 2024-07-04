@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   userCoupon.init({
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
     couponId: {
-      type: DataTypes.STRING,
+      type: DataTypes.BIGINT,
       allowNull: false
     },
     status: DataTypes.INTEGER,
