@@ -136,6 +136,7 @@ router.post('/login', async (req, res) => {
         if (!userInfo) {
             throw new NotFoundError('用户不存在，无法登录');
         }
+
         // 验证密码
         const isPasswordValid = bcrypt.compareSync(password, userInfo.password);
         if (!isPasswordValid) {

@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
+      specId: {
+        type: Sequelize.BIGINT,
+        allowNull: false
+      },
       userId: {
         type: Sequelize.BIGINT,
         allowNull: false
@@ -23,11 +27,6 @@ module.exports = {
       },
       quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      status: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        defaultValue: 0,
         allowNull: false
       },
       createdAt: {

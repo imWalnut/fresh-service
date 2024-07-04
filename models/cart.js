@@ -18,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    orderId: {
+    specId: {
+      type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    userId: {
       type: DataTypes.BIGINT,
       allowNull: false
     },
@@ -29,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false
-    },
-    status: DataTypes.INTEGER.UNSIGNED
+    }
   }, {
     sequelize,
     modelName: 'cart',

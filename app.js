@@ -9,6 +9,7 @@ let indexRouter = require('./routes/index');
 let apiUsersRouter = require('./routes/api/users');
 let apiProductsRouter = require('./routes/api/products');
 let apiAuthRouter = require('./routes/api/auth');
+let apiCartRouter = require('./routes/api/carts');
 
 let app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', adminAuth, apiUsersRouter);
 app.use('/api/products', adminAuth, apiProductsRouter);
+app.use('/api/carts', adminAuth, apiCartRouter);
 app.use('/api/auth', apiAuthRouter);
 
 module.exports = app;
