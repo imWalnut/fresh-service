@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             models.productSpec.belongsTo(models.product, {foreignKey: 'productId', as: 'productSpecList'});
+            models.productSpec.belongsTo(models.spec, {foreignKey: 'specId', as: 'specInfo'});
+            models.productSpec.hasMany(models.cart, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
         }
     }
 
@@ -24,22 +26,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 notEmpty: {
                     msg: '商品不能为空'
-                }
-            }
-        },
-        status: {
-            type: DataTypes.TINYINT.UNSIGNED,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: '状态必须存在。'
-                },
-                notEmpty: {
-                    msg: '状态不能为空。'
-                },
-                isIn: {
-                    args: [[0, 1]],
-                    msg: "只能为0，1"
                 }
             }
         },

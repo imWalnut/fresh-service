@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      specId: {
+      productSpecId: {
         type: Sequelize.BIGINT,
         allowNull: false
       },

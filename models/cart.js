@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.cart.belongsTo(models.user, {foreignKey: 'userId', as: 'userInfo'});
+      models.cart.belongsTo(models.product, {foreignKey: 'productId', as: 'productInfo'});
+      models.cart.belongsTo(models.productSpec, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
     }
   }
   cart.init({
@@ -18,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
       allowNull: false
     },
-    specId: {
+    productSpecId: {
       type: DataTypes.BIGINT,
       allowNull: false
     },

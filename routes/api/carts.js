@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {cart} = require('../../models')
+const {cart, user, product, productSpec} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -13,7 +13,7 @@ const {success, failure} = require('../../utils/responses');
 function filterBody(req) {
     return {
         productId: req.body.productId,
-        specId: req.body.specId,
+        productSpecId: req.body.productSpecId,
         userId: req.body.userId,
         totalPrice: req.body.totalPrice,
         quantity: req.body.quantity
@@ -32,7 +32,22 @@ router.get('/getCartList', async function (req, res, next) {
                 userId: {
                     [Op.eq]: req.query.userId
                 }
-            }
+            },
+            include: [
+                {
+                    model: user,
+                    as: 'userInfo'
+                },
+                {
+                    model: product,
+                    as: 'productInfo'
+                },
+                {
+                    model: productSpec,
+                    as: 'productSpecInfo',
+                    attributes: ['id', 'remark', 'specAmount', 'price']
+                }
+            ]
         }
         const carts = await cart.findAll(condition)
         success(res, '查询购物车列表成功', carts);

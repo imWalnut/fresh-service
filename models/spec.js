@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.product.hasMany(models.productSpec, {foreignKey: 'specId', as: 'specInfo'});
     }
   }
   spec.init({
@@ -27,22 +27,6 @@ module.exports = (sequelize, DataTypes) => {
         len: {
           args: [1, 10],
           msg: '规格名称长度需要在1 ~ 10个字符之间。'
-        }
-      }
-    },
-    status: {
-      type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '状态必须存在。'
-        },
-        notEmpty: {
-          msg: '状态不能为空。'
-        },
-        isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"
         }
       }
     },

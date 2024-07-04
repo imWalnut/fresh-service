@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {product, productSpec} = require('../../models')
+const {product, productSpec, group, category, spec} = require('../../models')
 const {Op} = require('sequelize')
-const { NotFoundError } = require('../../utils/errors');
-const { success, failure } = require('../../utils/responses');
+const {NotFoundError} = require('../../utils/errors');
+const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
@@ -47,7 +47,24 @@ function getCondition() {
             {
                 model: productSpec,
                 as: 'productSpecList',
-                attributes: ['id', 'status', 'specId', 'specAmount', 'price']
+                attributes: ['id', 'specAmount', 'price'],
+                include: [
+                    {
+                        model: spec,
+                        as: 'specInfo',
+                        attributes: ['id', 'name', 'remark']
+                    }
+                ]
+            },
+            {
+                model: group,
+                as: 'groupInfo',
+                attributes: ['id', 'name', 'remark']
+            },
+            {
+                model: category,
+                as: 'categoryInfo',
+                attributes: ['id', 'name', 'image', 'remark']
             }
         ]
     }
@@ -69,6 +86,9 @@ async function getProductInfo(req) {
     if (!productInfo) {
         throw new NotFoundError(`ID: ${id}的商品未找到。`)
     }
+
+    delete productInfo.dataValues.groupId
+    delete productInfo.dataValues.categoryId
 
     return productInfo;
 }
@@ -155,7 +175,7 @@ router.get('/getProductsListByPage/', async function (req, res, next) {
  */
 router.get('/getProductInfo/:id', async function (req, res, next) {
     try {
-        const productInfo = await getProductInfo(req);
+        let productInfo = await getProductInfo(req);
         success(res, '查询商品成功', {productInfo});
     } catch (err) {
         failure(res, err)
@@ -199,7 +219,7 @@ router.post('/addProductInfo/', async function (req, res, next) {
 router.delete('/deleteProductInfo/:id', async function (req, res, next) {
     try {
         const productInfo = await getProductInfo(req);
-        await productSpec.destroy({ where: { productId: req.params.id } });
+        await productSpec.destroy({where: {productId: req.params.id}});
         await productInfo.destroy()
         success(res, '删除商品成功');
     } catch (err) {

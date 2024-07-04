@@ -13,11 +13,6 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      status: {
-        allowNull: false,
-        defaultValue: 0,
-        type: Sequelize.TINYINT.UNSIGNED
-      },
       remark: {
         type: Sequelize.STRING
       },
