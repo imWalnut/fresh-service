@@ -17,22 +17,6 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      status: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: '状态必须存在'
-          },
-          notEmpty: {
-            msg: '态不能为空。'
-          },
-          isIn: {
-            args: [[0, 1, 2]],
-            msg: "只能为0，1，2"
-          }
-        }
-      },
       endDate: {
         type: Sequelize.DATE,
         allowNull: false

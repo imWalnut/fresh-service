@@ -79,7 +79,7 @@ router.get('/getCartListByPage/', async function (req, res, next) {
         }
         const {count, rows} = await cart.findAndCountAll(condition)
         success(res, '分页查询购物车列表成功', {
-            users: rows,
+            carts: rows,
             pagination: {
                 total: count,
                 currentPage,

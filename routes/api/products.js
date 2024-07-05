@@ -157,7 +157,7 @@ router.get('/getProductsListByPage/', async function (req, res, next) {
         }
         const {count, rows} = await product.findAndCountAll(condition)
         success(res, '查询商品列表成功', {
-            Products: rows,
+            products: rows,
             pagination: {
                 total: count,
                 currentPage,

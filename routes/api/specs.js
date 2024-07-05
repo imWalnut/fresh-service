@@ -77,7 +77,7 @@ router.get('/getSpecListByPage/', async function (req, res, next) {
         }
         const {count, rows} = await spec.findAndCountAll(condition)
         success(res, '分页查询规格列表成功', {
-            users: rows,
+            specs: rows,
             pagination: {
                 total: count,
                 currentPage,
@@ -135,7 +135,7 @@ router.put('/updateSpecInfo/:id', async function (req, res, next) {
         const specInfo = await getSpecInfo(req);
         const body = filterBody(req)
         await specInfo.update(body)
-        success(res, '更新规格成功', {id: specInfo.id})
+        success(res, '更新规格成功', {specInfo})
     } catch (err) {
         failure(res, err)
     }

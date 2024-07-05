@@ -78,7 +78,7 @@ router.get('/getGroupListByPage/', async function (req, res, next) {
         }
         const {count, rows} = await group.findAndCountAll(condition)
         success(res, '分页查询分组列表成功', {
-            users: rows,
+            groups: rows,
             pagination: {
                 total: count,
                 currentPage,
