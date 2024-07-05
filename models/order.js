@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.order.hasMany(models.orderProduct, {foreignKey: 'orderId', as: 'orderProductList'});
+      models.order.belongsTo(models.user, {foreignKey: 'userId', as: 'orderUserInfo'});
     }
   }
   order.init({
@@ -28,29 +29,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    postage: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
+    postage: DataTypes.INTEGER,
     sendTime: DataTypes.DATE,
     endTime: DataTypes.DATE,
     closeTime: DataTypes.DATE,
-    status: {
-      type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '状态必须存在。'
-        },
-        notEmpty: {
-          msg: '状态不能为空。'
-        },
-        isIn: {
-          args: [[0, 1, 2, 3, 4, 5]],
-          msg: "只能为0，1, 2, 3, 4, 5"
-        }
-      }
-    },
+    cancelTime: DataTypes.DATE,
+    status: DataTypes.TINYINT.UNSIGNED,
   }, {
     sequelize,
     modelName: 'order',

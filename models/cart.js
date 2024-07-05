@@ -11,15 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.cart.belongsTo(models.user, {foreignKey: 'userId', as: 'userInfo'});
-      models.cart.belongsTo(models.product, {foreignKey: 'productId', as: 'productInfo'});
       models.cart.belongsTo(models.productSpec, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
     }
   }
   cart.init({
-    productId: {
-      type: DataTypes.BIGINT,
-      allowNull: false
-    },
     productSpecId: {
       type: DataTypes.BIGINT,
       allowNull: false

@@ -38,7 +38,7 @@ function filterSpecBody(req) {
 }
 
 /**
- * 公共方法：关联商品、商品规格
+ * 公共方法：关联商品、商品规格、商品分组、商品分类
  * @returns {{include: [{as: string, attributes: string[]}], attributes: {exclude: string[]}}}
  */
 function getCondition() {

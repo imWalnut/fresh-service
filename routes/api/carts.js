@@ -12,11 +12,36 @@ const {success, failure} = require('../../utils/responses');
  */
 function filterBody(req) {
     return {
-        productId: req.body.productId,
         productSpecId: req.body.productSpecId,
         userId: req.body.userId,
         totalPrice: req.body.totalPrice,
         quantity: req.body.quantity
+    }
+}
+
+/**
+ * 公共方法：关联订单、订单商品、用户
+ * @returns {{include: [{as: string, attributes: string[]}], attributes: {exclude: string[]}}}
+ */
+function getCondition() {
+    return {
+        include: [
+            {
+                model: user,
+                as: 'userInfo'
+            },
+            {
+                model: productSpec,
+                as: 'productSpecInfo',
+                attributes: ['id', 'remark', 'specAmount', 'price'],
+                include: [
+                    {
+                        model: product,
+                        as: 'productSpecList'
+                    },
+                ]
+            }
+        ]
     }
 }
 
@@ -33,21 +58,7 @@ router.get('/getCartList', async function (req, res, next) {
                     [Op.eq]: req.query.userId
                 }
             },
-            include: [
-                {
-                    model: user,
-                    as: 'userInfo'
-                },
-                {
-                    model: product,
-                    as: 'productInfo'
-                },
-                {
-                    model: productSpec,
-                    as: 'productSpecInfo',
-                    attributes: ['id', 'remark', 'specAmount', 'price']
-                }
-            ]
+            ...getCondition()
         }
         const carts = await cart.findAll(condition)
         success(res, '查询购物车列表成功', carts);
@@ -71,7 +82,12 @@ router.get('/getCartListByPage/', async function (req, res, next) {
             order: [['createdAt', 'DESC']],
             limit: pageSize,
             offset: offset,
-            where: {
+            where: {},
+            ...getCondition()
+        }
+
+        if (query.userId) {
+            condition.where = {
                 userId: {
                     [Op.eq]: req.query.userId
                 }

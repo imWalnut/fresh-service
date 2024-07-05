@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.product.hasMany(models.productSpec, {foreignKey: 'productId', as: 'productSpecList'});
-      models.product.hasMany(models.cart, {foreignKey: 'productId', as: 'productInfo'});
       models.product.belongsTo(models.group, {foreignKey: 'groupId', as: 'groupInfo'});
       models.product.belongsTo(models.category, {foreignKey: 'categoryId', as: 'categoryInfo'});
     }

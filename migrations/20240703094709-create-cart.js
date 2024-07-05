@@ -9,10 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      productId: {
-        type: Sequelize.BIGINT,
-        allowNull: false
-      },
       productSpecId: {
         type: Sequelize.BIGINT,
         allowNull: false

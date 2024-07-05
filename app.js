@@ -14,6 +14,7 @@ let apiCategoryRouter = require('./routes/api/categories');
 let apiGroupRouter = require('./routes/api/groups');
 let apiSpecRouter = require('./routes/api/specs');
 let apiCouponRouter = require('./routes/api/coupons');
+let apiOrderRouter = require('./routes/api/orders');
 
 let app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/categories', adminAuth, apiCategoryRouter);
 app.use('/api/groups', adminAuth, apiGroupRouter);
 app.use('/api/specs', adminAuth, apiSpecRouter);
 app.use('/api/coupons', adminAuth, apiCouponRouter);
+app.use('/api/orders', adminAuth, apiOrderRouter);
 app.use('/api/auth', apiAuthRouter);
 
 module.exports = app;

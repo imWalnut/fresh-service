@@ -25,8 +25,7 @@ module.exports = {
         defaultValue: 0
       },
       payment: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       postage: {
         type: Sequelize.INTEGER
@@ -38,6 +37,9 @@ module.exports = {
         type: Sequelize.DATE
       },
       endTime: {
+        type: Sequelize.DATE
+      },
+      cancelTime: {
         type: Sequelize.DATE
       },
       status: {

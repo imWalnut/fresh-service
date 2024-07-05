@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             models.productSpec.belongsTo(models.product, {foreignKey: 'productId', as: 'productSpecList'});
             models.productSpec.belongsTo(models.spec, {foreignKey: 'specId', as: 'specInfo'});
+            models.productSpec.hasMany(models.orderProduct, {foreignKey: 'productSpecId', as: 'orderProductSpecInfo'});
             models.productSpec.hasMany(models.cart, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
         }
     }

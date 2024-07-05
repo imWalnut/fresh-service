@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      productId: {
+      productSpecId: {
         type: Sequelize.BIGINT,
         allowNull: false
       },
@@ -23,11 +23,6 @@ module.exports = {
       },
       quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      status: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        defaultValue: 0,
         allowNull: false
       },
       createdAt: {
