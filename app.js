@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/users', apiUsersRouter);
+app.use('/api/users', adminAuth, apiUsersRouter);
 app.use('/api/products', adminAuth, apiProductsRouter);
 app.use('/api/carts', adminAuth, apiCartRouter);
 app.use('/api/categories', adminAuth, apiCategoryRouter);
