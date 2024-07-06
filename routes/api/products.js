@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {product, productSpec, group, category, spec} = require('../../models')
+const {product, productSpec, group, category} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -26,14 +26,13 @@ function filterBody(req) {
     }
 }
 
-function filterSpecBody(req) {
+function filterProductSpecBody(req) {
     return {
-        productId: req.productId,
-        specId: req.specId,
-        specAmount: req.specAmount,
-        remark: req.remark,
-        status: req.status,
-        price: req.price
+        specName: req.specName,
+        specRemark: req.specRemark,
+        quantity: req.quantity,
+        price: req.price,
+        remark: req.remark
     }
 }
 
@@ -47,14 +46,7 @@ function getCondition() {
             {
                 model: productSpec,
                 as: 'productSpecList',
-                attributes: ['id', 'specAmount', 'price'],
-                include: [
-                    {
-                        model: spec,
-                        as: 'specInfo',
-                        attributes: ['id', 'name', 'remark']
-                    }
-                ]
+                attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
             },
             {
                 model: group,
@@ -198,8 +190,10 @@ router.post('/addProductInfo/', async function (req, res, next) {
         }
         const productInfo = await product.create(body)
         const specBody = specList.map(item => {
-            item.productId = productInfo.id
-            return filterSpecBody(item)
+            return {
+                ...filterProductSpecBody(item),
+                productId: productInfo.id
+            }
         })
         const fields = Object.keys(specBody[0])
         await productSpec.bulkCreate(specBody, {
@@ -246,8 +240,10 @@ router.put('/updateProductInfo/:id', async function (req, res, next) {
             }
         });
         const specBody = specList.map(item => {
-            item.productId = req.params.id
-            return filterSpecBody(item)
+            return {
+                ...filterProductSpecBody(item),
+                productId: req.params.id
+            }
         })
         const fields = Object.keys(specBody[0])
         await productSpec.bulkCreate(specBody, {

@@ -33,7 +33,7 @@ function getCondition() {
             {
                 model: productSpec,
                 as: 'productSpecInfo',
-                attributes: ['id', 'remark', 'specAmount', 'price'],
+                attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark'],
                 include: [
                     {
                         model: product,
@@ -69,9 +69,9 @@ router.get('/getCartList', async function (req, res, next) {
 
 /**
  * 分页查询购物车列表
- * GET /api/carts/getCartListByPage
+ * GET /api/carts/getCartListByPage/:id
  */
-router.get('/getCartListByPage/', async function (req, res, next) {
+router.get('/getCartListByPage/:id', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query
@@ -82,16 +82,12 @@ router.get('/getCartListByPage/', async function (req, res, next) {
             order: [['createdAt', 'DESC']],
             limit: pageSize,
             offset: offset,
-            where: {},
-            ...getCondition()
-        }
-
-        if (query.userId) {
-            condition.where = {
+            where: {
                 userId: {
-                    [Op.eq]: req.query.userId
+                    [Op.eq]: req.params.id
                 }
-            }
+            },
+            ...getCondition()
         }
         const {count, rows} = await cart.findAndCountAll(condition)
         success(res, '分页查询购物车列表成功', {
@@ -123,19 +119,22 @@ router.post('/addCartsInfo', async function (req, res, next) {
 
 /**
  * 购物车删除商品
- * DELETE /api/carts/deleteCartsInfo/:id
+ * DELETE /api/carts/deleteCartsInfo/
  */
-router.delete('/deleteCartsInfo/:id', async function (req, res, next) {
+router.delete('/deleteCartsInfo/', async function (req, res, next) {
     try {
-        const {id} = req.params;
-        // 查询用户
-        const cartInfo = await cart.findByPk(id);
-        // 如果没有找到，就抛出异常
-        if (!cartInfo) {
-            throw new NotFoundError(`购物车中ID: ${id}的商品未找到。`)
+        const {ids} = req.query;
+        if (!ids) {
+            throw new NotFoundError(`请选择需要移除的商品`)
         }
-        await cartInfo.destroy()
-        success(res, '购物车删除商品成功');
+        await cart.destroy({
+            where: {
+                id: {
+                    [Op.in]: eval(ids)
+                }
+            }
+        })
+        success(res, '购物车移除商品成功');
     } catch (err) {
         failure(res, err)
     }

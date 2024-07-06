@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {order, orderProduct, user, productSpec} = require('../../models')
+const {order, orderProduct, user, product, userCoupon} = require('../../models')
 const {Op} = require('sequelize')
-const {NotFoundError} = require('../../utils/errors');
+const {NotFoundError, BadRequestError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
 
 /**
@@ -29,7 +29,13 @@ function filterBody(req) {
 function filterProductSpecBody(req) {
     return {
         orderId: req.orderId,
-        productSpecId: req.productSpecId,
+        productId: req.productId,
+        productName: req.productName,
+        productImage: req.productImage,
+        productCode: req.productCode,
+        specName: req.specName,
+        specNum: req.specNum,
+        specPrice: req.specPrice,
         totalPrice: req.totalPrice,
         quantity: req.quantity
     }
@@ -44,13 +50,7 @@ function getCondition() {
         include: [
             {
                 model: orderProduct,
-                as: 'orderProductList',
-                include: [
-                    {
-                        model: productSpec,
-                        as: 'orderProductSpecInfo'
-                    }
-                ]
+                as: 'orderProductList'
             },
             {
                 model: user,
@@ -74,10 +74,50 @@ async function getOrderInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!orderInfo) {
-        throw new NotFoundError(`ID: ${id}的订单未找到。`)
+        throw new NotFoundError(`ID: ${id}的订单未找到`)
     }
 
     return orderInfo;
+}
+
+/**
+ * 公共方法：查询用户优惠券
+ */
+async function getUserCouponInfo(val) {
+    const deadLine = new Date()
+    const condition = {
+        where: {
+            id: val.userCouponId,
+            userId: val.userId,
+            endDate: {
+                [Op.gte]: deadLine
+            }
+        }
+    }
+    
+    const userCouponInfo = await userCoupon.findOne(condition);
+
+    // 如果没有找到，就抛出异常
+    if (!userCouponInfo) {
+        throw new NotFoundError(`优惠券无效`)
+    }
+
+    return userCouponInfo;
+}
+
+/**
+ * 公共方法：更改商品库存及销售数量
+ */
+async function updateStock(orderProduct) {
+    // 查询商品规格
+    const productInfo = await product.findByPk(orderProduct.productId);
+    const total = orderProduct.quantity * orderProduct.specNum
+    await productInfo.decrement('stockAmount', {
+        by: total, // 减少的数量是订单项中的数量
+    });
+    await productInfo.increment('soldAmount', {
+        by: total, // 增加的数量是订单项中的数量
+    });
 }
 
 
@@ -182,16 +222,30 @@ router.get('/getOrderInfo/:id', async function (req, res, next) {
 router.post('/addOrderInfo/', async function (req, res, next) {
     try {
         const body = filterBody(req)
-        const productSpecList = eval(req.body.productSpecList)
-        if (!productSpecList || !productSpecList.length) {
+        const orderProductList = eval(req.body.orderProductList)
+        if (!orderProductList || !orderProductList.length) {
             return res.status(400).json({
                 status: false,
                 message: '商品不能为空。',
             });
         }
         body.status = 0
+        // 查询优惠券
+        const userCouponInfo = await getUserCouponInfo(body)
+        // 查库存
+        for (const orderProduct of orderProductList) {
+            const productInfo = await product.findByPk(orderProduct.productId)
+            const quantity = parseInt(orderProduct.quantity.toString()) || 0
+            const specNum = parseInt(orderProduct.specNum.toString()) || 0
+            const total = quantity * specNum
+            if (total > productInfo.stockAmount) {
+                throw new BadRequestError('库存不足');
+            }
+        }
+        // 创建订单
         const orderInfo = await order.create(body)
-        const productSpecBody = productSpecList.map(item => {
+        // 创建订单下商品信息
+        const productSpecBody = orderProductList.map(item => {
             item.orderId = orderInfo.id
             return filterProductSpecBody(item)
         })
@@ -200,6 +254,12 @@ router.post('/addOrderInfo/', async function (req, res, next) {
             ignoreDuplicates: true,
             fields: fields
         })
+        // 更新库存、销量
+        for (const orderProduct of orderProductList) {
+            await updateStock(orderProduct)
+        }
+        // 删除优惠券
+        await userCouponInfo.destroy();
         success(res, '新增订单成功', {orderInfo}, 201);
     } catch (err) {
         failure(res, err)

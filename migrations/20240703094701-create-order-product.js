@@ -9,8 +9,32 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      productSpecId: {
+      productId: {
         type: Sequelize.BIGINT,
+        allowNull: false
+      },
+      productName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      productImage: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      productCode: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      specName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      specNum: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      specPrice: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       orderId: {

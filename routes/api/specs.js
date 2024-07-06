@@ -109,15 +109,6 @@ router.post('/addSpecInfo', async function (req, res, next) {
  */
 router.delete('/deleteSpecInfo/:id', async function (req, res, next) {
     try {
-        const count = await productSpec.count({
-            where: {
-                specId: req.params.id
-            }
-        })
-        if (count) {
-            const msg = `该规格已关联${count}个商品，禁止删除`
-            throw new BadRequestError(msg);
-        }
         const specInfo = await getSpecInfo(req)
         await specInfo.destroy()
         success(res, '删除规格成功');

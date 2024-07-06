@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             models.productSpec.belongsTo(models.product, {foreignKey: 'productId', as: 'productSpecList'});
-            models.productSpec.belongsTo(models.spec, {foreignKey: 'specId', as: 'specInfo'});
-            models.productSpec.hasMany(models.orderProduct, {foreignKey: 'productSpecId', as: 'orderProductSpecInfo'});
             models.productSpec.hasMany(models.cart, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
         }
     }
@@ -30,23 +28,27 @@ module.exports = (sequelize, DataTypes) => {
                 }
             }
         },
-        remark: {
+        specName: {
             type: DataTypes.STRING,
-            allowNull: true
-        },
-        specId: {
-            type: DataTypes.BIGINT,
             allowNull: false,
             validate: {
                 notNull: {
-                    msg: '商品规格必须存在'
+                    msg: '规格名称必须存在'
                 },
                 notEmpty: {
-                    msg: '商品规格不能为空'
+                    msg: '规格名称不能为空'
+                },
+                len: {
+                    args: [1, 10],
+                    msg: '规格名称长度需要在1 ~ 10个字符之间。'
                 }
             }
         },
-        specAmount: {
+        specRemark: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        quantity: {
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
@@ -69,7 +71,11 @@ module.exports = (sequelize, DataTypes) => {
                     msg: '商品价格不能为空'
                 }
             }
-        }
+        },
+        remark: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
     }, {
         sequelize,
         modelName: 'productSpec',

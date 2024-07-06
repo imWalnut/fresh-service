@@ -4,23 +4,20 @@
     "password": "2019Shadoukeyi!@#",
     "database": "fresh_service_development",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "timezone": "+08:00"
+    "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "2019Shadoukeyi!@#",
     "database": "fresh_service_test",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "timezone": "+08:00"
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "2019Shadoukeyi!@#",
     "database": "fresh_service_production",
     "host": "116.205.136.60",
-    "dialect": "mysql",
-    "timezone": "+08:00"
+    "dialect": "mysql"
   }
 }

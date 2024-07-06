@@ -148,14 +148,15 @@ router.post('/addUserInfo/', async function (req, res, next) {
 });
 
 /**
- * 删除用户
- * DELETE /api/users/deleteUserInfo/:id
+ * 更改用户状态
+ * PUT /api/users/updateUserStatus/:id
  */
-router.delete('/deleteUserInfo/:id', async function (req, res, next) {
+router.put('/updateUserStatus/:id', async function (req, res, next) {
     try {
         const userInfo = await getUserInfo(req);
-        await userInfo.destroy()
-        success(res, '删除用户成功');
+        userInfo.status = req.body.status
+        await userInfo.save()
+        success(res, '更改用户状态成功');
     } catch (err) {
         failure(res, err)
     }
@@ -163,7 +164,7 @@ router.delete('/deleteUserInfo/:id', async function (req, res, next) {
 
 /**
  * 更新用户
- * PUT /api/users/updateUserInfo:id
+ * PUT /api/users/updateUserInfo/:id
  */
 router.put('/updateUserInfo/:id', async function (req, res, next) {
     try {

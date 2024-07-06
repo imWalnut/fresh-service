@@ -112,7 +112,6 @@ router.post('/addCouponInfo', async function (req, res, next) {
 router.delete('/deleteCouponInfo/:id', async function (req, res, next) {
     try {
         const couponInfo = await getCouponInfo(req)
-        await userCoupon.destroy({where: {couponId: req.params.id}});
         await couponInfo.destroy()
         success(res, '删除优惠券成功');
     } catch (err) {
@@ -144,7 +143,10 @@ router.post('/sendCouponToUser', async function (req, res, next) {
     try {
         const body = {
             userId: req.body.userId,
-            couponId: req.body.couponId,
+            name: req.body.name,
+            value: req.body.value,
+            condition: req.body.condition,
+            remark: req.body.remark,
             endDate: req.body.endDate
         }
         const userCouponInfo = await userCoupon.create(body)
@@ -180,14 +182,6 @@ router.get('/getUserCouponList/:id', async function (req, res, next) {
     try {
         const condition = {
             order: [['createdAt', 'DESC']],
-            attributes: ['id', 'userId', 'endDate'],
-            include: [
-                {
-                    model: coupon,
-                    as: 'couponInfo',
-                    attributes: ['id', 'name', 'value', 'condition', 'remark']
-                }
-            ]
         }
         const userCoupons = await userCoupon.findAll(condition)
         success(res, '查询用户优惠券列表成功', userCoupons);
@@ -209,13 +203,7 @@ router.get('/getUserCouponListByPage/', async function (req, res, next) {
         const offset = (currentPage - 1) * pageSize
         const condition = {
             order: [['createdAt', 'DESC']],
-            attributes: ['id', 'endDate'],
             include: [
-                {
-                    model: coupon,
-                    as: 'couponInfo',
-                    attributes: ['id', 'name', 'value', 'condition', 'remark']
-                },
                 {
                     model: user,
                     as: 'couponUserInfo',

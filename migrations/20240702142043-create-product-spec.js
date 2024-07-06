@@ -13,20 +13,23 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      remark: {
-        type: Sequelize.STRING
-      },
-      specId: {
-        type: Sequelize.BIGINT,
+      specName: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      specAmount: {
+      specRemark: {
+        type: Sequelize.STRING
+      },
+      quantity: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
       price: {
         type: Sequelize.INTEGER,
         allowNull: false
+      },
+      remark: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
