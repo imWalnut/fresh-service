@@ -7,13 +7,11 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
         name: req.body.name,
-        image: req.body.image,
+        imgUrl: req.body.imgUrl,
         parentId: req.body.parentId,
         remark: req.body.remark
     }
@@ -31,7 +29,7 @@ async function getCategoryInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!categoryInfo) {
-        throw new NotFoundError(`ID: ${id}的分类未找到。`)
+        throw new NotFoundError(`ID: ${id}的分类未找到`)
     }
 
     return categoryInfo;
@@ -71,7 +69,7 @@ async function getChildNeeds(rootNeeds){
             where : {
                 parentId : item.id
             },
-            attributes: ['id', 'name', 'image', 'parentId', 'remark'],
+            attributes: ['id', 'name', 'imgUrl', 'parentId', 'remark'],
             raw: true
         }))
     })
@@ -95,7 +93,7 @@ router.get('/getCategoryList', async function (req, res, next) {
             where : {
                 parentId : 0
             },
-            attributes: ['id', 'name', 'image', 'parentId', 'remark'],
+            attributes: ['id', 'name', 'imgUrl', 'parentId', 'remark'],
             raw: true
         })
         rootNeeds = await getChildNeeds(rootNeeds);
@@ -151,7 +149,7 @@ router.delete('/deleteCategoryInfo/:id', async function (req, res, next) {
         const categoryInfo = await category.findByPk(id);
         // 如果没有找到，就抛出异常
         if (!categoryInfo) {
-            throw new NotFoundError(`ID: ${id}的分类未找到。`)
+            throw new NotFoundError(`ID: ${id}的分类未找到`)
         }
 
         await deleteRecursiveCategoryInfo(id)

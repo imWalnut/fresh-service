@@ -48,7 +48,7 @@ function failure(res, error) {
         return res.status(401).json({
             status: false,
             message: '认证失败',
-            errors: ['您提交的 token 错误。']
+            errors: ['您提交的 token 错误']
         });
     }
 
@@ -56,7 +56,7 @@ function failure(res, error) {
         return res.status(401).json({
             status: false,
             message: '认证失败',
-            errors: ['您的 token 已过期。']
+            errors: ['您的 token 已过期']
         });
     }
 

@@ -14,8 +14,7 @@ module.exports = {
         allowNull: false
       },
       subImages: {
-        type: Sequelize.STRING,
-        allowNull: true
+        type: Sequelize.TEXT
       },
       mainImage: {
         type: Sequelize.STRING(1000),
@@ -53,7 +52,7 @@ module.exports = {
         type: Sequelize.TINYINT.UNSIGNED
       },
       remark: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING(1000)
       },
       createdAt: {
         allowNull: false,

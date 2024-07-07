@@ -3,63 +3,63 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class userCoupon extends Model {
+  class banner extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      models.userCoupon.belongsTo(models.user, {foreignKey: 'userId', as: 'couponUserInfo'});
+      // define association here
     }
   }
-  userCoupon.init({
-    userId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '用户id必须存在'
-        },
-        notEmpty: {
-          msg: '用户id不能为空'
-        }
-      }
-    },
-    endDate: DataTypes.DATE,
-    name: {
+  banner.init({
+    imgUrl: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '名称必须存在'
+          msg: '图片必须存在'
         },
         notEmpty: {
-          msg: '名称不能为空'
+          msg: '图片不能为空'
+        },
+        isUrl: {
+          msg: "图片地址格式错误"
         }
       }
     },
-    value: {
-      type: DataTypes.INTEGER,
+    hrefUrl: {
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '优惠金额必须存在'
+          msg: '跳转链接必须存在'
         },
         notEmpty: {
-          msg: '优惠金额不能为空'
+          msg: '跳转链接不能为空'
         }
       }
     },
-    condition: {
-      type: DataTypes.INTEGER
+    source: {
+      type: DataTypes.TINYINT.UNSIGNED,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '来源必须存在'
+        },
+        notEmpty: {
+          msg: '来源不能为空'
+        },
+        isIn: {
+          args: [[0, 1]],
+          msg: "只能为0，1"  // 0首页 1分类页
+        }
+      }
     },
-    remark: {
-      type: DataTypes.STRING
-    }
   }, {
     sequelize,
-    modelName: 'userCoupon',
+    modelName: 'banner',
   });
-  return userCoupon;
+  return banner;
 };

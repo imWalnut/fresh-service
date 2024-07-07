@@ -7,8 +7,6 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
@@ -37,7 +35,6 @@ function getCondition() {
                 include: [
                     {
                         model: product,
-                        as: 'productSpecList'
                     },
                 ]
             }

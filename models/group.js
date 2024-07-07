@@ -19,20 +19,19 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '分组名称必须存在。'
+          msg: '分组名称必须存在'
         },
         notEmpty: {
-          msg: '分组名称不能为空。'
+          msg: '分组名称不能为空'
         },
         len: {
           args: [1, 20],
-          msg: '分组名称长度需要在1 ~ 20个字符之间。'
+          msg: '分组名称长度需要在1 ~ 20个字符之间'
         }
       }
     },
     remark: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

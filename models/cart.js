@@ -17,19 +17,51 @@ module.exports = (sequelize, DataTypes) => {
   cart.init({
     productSpecId: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品规格必须存在'
+        },
+        notEmpty: {
+          msg: '商品规格不能为空'
+        }
+      }
     },
     userId: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '用户必须存在'
+        },
+        notEmpty: {
+          msg: '用户不能为空'
+        }
+      }
     },
     totalPrice: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品规格总价必须存在'
+        },
+        notEmpty: {
+          msg: '商品规格总价不能为空'
+        }
+      }
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '商品规格数量必须存在'
+        },
+        notEmpty: {
+          msg: '商品规格数量不能为空'
+        }
+      }
     }
   }, {
     sequelize,

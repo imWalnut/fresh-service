@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      models.product.hasMany(models.productSpec, {foreignKey: 'productId', as: 'productSpecList'});
+      models.product.hasMany(models.productSpec, {foreignKey: 'productId'});
       models.product.belongsTo(models.group, {foreignKey: 'groupId', as: 'groupInfo'});
       models.product.belongsTo(models.category, {foreignKey: 'categoryId', as: 'categoryInfo'});
     }
@@ -33,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     subImages: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.TEXT
     },
     mainImage: {
       type: DataTypes.STRING,
@@ -133,10 +132,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '状态必须存在。'
+          msg: '状态必须存在'
         },
         notEmpty: {
-          msg: '状态不能为空。'
+          msg: '状态不能为空'
         },
         isIn: {
           args: [[0, 1, 2, 3]],
@@ -145,8 +144,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     remark: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     },
   }, {
     sequelize,

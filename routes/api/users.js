@@ -7,15 +7,18 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
         phoneNumber: req.body.phoneNumber,
-        email: req.body.email,
         name: req.body.name,
         sex: req.body.sex,
+        provinceCode: req.body.provinceCode,
+        provinceName: req.body.provinceName,
+        cityCode: req.body.cityCode,
+        cityName: req.body.cityName,
+        countyCode: req.body.countyCode,
+        countyName: req.body.countyName,
         address: req.body.address,
         role: req.body.role,
         inviteBy: req.body.inviteBy,
@@ -41,7 +44,7 @@ async function getUserInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!userInfo) {
-        throw new NotFoundError(`ID: ${id}的用户未找到。`)
+        throw new NotFoundError(`ID: ${id}的用户未找到`)
     }
 
     return userInfo;
@@ -52,13 +55,13 @@ async function getUserInfo(req) {
  * 查询用户列表
  * GET /api/users/getUsersList
  */
-router.get('/getUsersList/', async function (req, res, next) {
+router.get('/getUsersList', async function (req, res, next) {
     try {
         const condition = {
             order: [['createdAt', 'DESC']]
         }
         const users = await user.findAll(condition)
-        success(res, '查询用户列表成功。', users);
+        success(res, '查询用户列表成功', users);
     } catch (err) {
         failure(res, err)
     }
@@ -68,7 +71,7 @@ router.get('/getUsersList/', async function (req, res, next) {
  * 分页查询用户列表
  * GET /api/users/getUsersListByPage
  */
-router.get('/getUsersListByPage/', async function (req, res, next) {
+router.get('/getUsersListByPage', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query
@@ -87,14 +90,6 @@ router.get('/getUsersListByPage/', async function (req, res, next) {
             condition.where = {
                 userName: {
                     [Op.like]: `%${query.userName}%`
-                }
-            };
-        }
-
-        if (query.email) {
-            condition.where = {
-                email: {
-                    [Op.eq]: query.email
                 }
             };
         }
@@ -137,7 +132,7 @@ router.get('/getUserInfo/:id', async function (req, res, next) {
  * 新增用户
  * POST /api/users/addUserInfo
  */
-router.post('/addUserInfo/', async function (req, res, next) {
+router.post('/addUserInfo', async function (req, res, next) {
     try {
         const body = filterBody(req)
         const userInfo = await user.create(body)

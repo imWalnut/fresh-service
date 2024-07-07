@@ -16,18 +16,33 @@ module.exports = (sequelize, DataTypes) => {
   }
   order.init({
     orderNo: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     userId: {
       type: DataTypes.BIGINT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '用户id必须存在'
+        },
+        notEmpty: {
+          msg: '用户id不能为空'
+        }
+      }
     },
     userCouponId: DataTypes.BIGINT,
     paymentType: DataTypes.INTEGER,
     payment: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '支付金额必须存在'
+        },
+        notEmpty: {
+          msg: '支付金额不能为空'
+        }
+      }
     },
     postage: DataTypes.INTEGER,
     sendTime: DataTypes.DATE,

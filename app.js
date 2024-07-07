@@ -15,6 +15,8 @@ let apiGroupRouter = require('./routes/api/groups');
 let apiSpecRouter = require('./routes/api/specs');
 let apiCouponRouter = require('./routes/api/coupons');
 let apiOrderRouter = require('./routes/api/orders');
+let apiShopRouter = require('./routes/api/shop');
+let visitorBaseRouter = require('./routes/visitor/base');
 
 let app = express();
 
@@ -25,7 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/api/users', adminAuth, apiUsersRouter);
+app.use('/api/users', apiUsersRouter);
 app.use('/api/products', adminAuth, apiProductsRouter);
 app.use('/api/carts', adminAuth, apiCartRouter);
 app.use('/api/categories', adminAuth, apiCategoryRouter);
@@ -33,6 +35,8 @@ app.use('/api/groups', adminAuth, apiGroupRouter);
 app.use('/api/specs', adminAuth, apiSpecRouter);
 app.use('/api/coupons', adminAuth, apiCouponRouter);
 app.use('/api/orders', adminAuth, apiOrderRouter);
+app.use('/api/shop', adminAuth, apiShopRouter);
+app.use('/visitor/base', visitorBaseRouter);
 app.use('/api/auth', apiAuthRouter);
 
 module.exports = app;

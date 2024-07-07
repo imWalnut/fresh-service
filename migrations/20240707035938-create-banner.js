@@ -2,27 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('coupons', {
+    await queryInterface.createTable('banners', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT
+        type: Sequelize.INTEGER
       },
-      name: {
+      imgUrl: {
+        type: Sequelize.STRING(1000),
+        allowNull: false
+      },
+      hrefUrl: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      value: {
-        type: Sequelize.INTEGER,
+      source: {
+        type: Sequelize.TINYINT.UNSIGNED,
         allowNull: false
-      },
-      condition: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-      },
-      remark: {
-        type: Sequelize.STRING(1000)
       },
       createdAt: {
         allowNull: false,
@@ -33,13 +30,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addIndex(
-        'coupons', {
-          fields: ['name'],  // 要索引的字段
-          unique: true        // 唯一索引
-        });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('coupons');
+    await queryInterface.dropTable('banners');
   }
 };

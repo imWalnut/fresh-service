@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       productImage: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         allowNull: false
       },
       productCode: {

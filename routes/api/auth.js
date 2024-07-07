@@ -60,7 +60,7 @@ router.post('/signIn', async (req, res) => {
  * 注册用户
  * POST /api/auth/signUp
  */
-router.post('/signUp/', async function (req, res, next) {
+router.post('/signUp', async function (req, res, next) {
     try {
         const body = req.body
         if (!body.shopName) {
@@ -85,9 +85,14 @@ router.post('/signUp/', async function (req, res, next) {
         }
         const params = {
             phoneNumber: req.body.phoneNumber,
-            email: req.body.email,
             name: req.body.name,
             sex: req.body.sex,
+            provinceCode: req.body.provinceCode,
+            provinceName: req.body.provinceName,
+            cityCode: req.body.cityCode,
+            cityName: req.body.cityName,
+            countyCode: req.body.countyCode,
+            countyName: req.body.countyName,
             address: req.body.address,
             role: 2,
             inviteBy: req.body.inviteBy,

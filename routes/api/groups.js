@@ -7,8 +7,6 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
@@ -29,7 +27,7 @@ async function getGroupInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!groupInfo) {
-        throw new NotFoundError(`ID: ${id}的分组未找到。`)
+        throw new NotFoundError(`ID: ${id}的分组未找到`)
     }
 
     return groupInfo;
@@ -56,7 +54,7 @@ router.get('/getGroupList', async function (req, res, next) {
  * 分页查询分组列表
  * GET /api/groups/getGroupListByPage
  */
-router.get('/getGroupListByPage/', async function (req, res, next) {
+router.get('/getGroupListByPage', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query

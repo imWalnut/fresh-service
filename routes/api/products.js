@@ -7,8 +7,6 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{image: any, classify: any, code: any, name: string, remark: any, group: any}}
  */
 function filterBody(req) {
     return {
@@ -45,7 +43,6 @@ function getCondition() {
         include: [
             {
                 model: productSpec,
-                as: 'productSpecList',
                 attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
             },
             {
@@ -56,7 +53,7 @@ function getCondition() {
             {
                 model: category,
                 as: 'categoryInfo',
-                attributes: ['id', 'name', 'image', 'remark']
+                attributes: ['id', 'name', 'imgUrl', 'remark']
             }
         ]
     }
@@ -76,7 +73,7 @@ async function getProductInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!productInfo) {
-        throw new NotFoundError(`ID: ${id}的商品未找到。`)
+        throw new NotFoundError(`ID: ${id}的商品未找到`)
     }
 
     delete productInfo.dataValues.groupId
@@ -90,14 +87,14 @@ async function getProductInfo(req) {
  * 查询商品列表
  * GET /api/products/getProductsList
  */
-router.get('/getProductsList/', async function (req, res, next) {
+router.get('/getProductsList', async function (req, res, next) {
     try {
         const condition = {
             ...getCondition(),
             order: [['createdAt', 'DESC']]
         }
         const products = await product.findAll(condition)
-        success(res, '查询商品列表成功。', products);
+        success(res, '查询商品列表成功', products);
     } catch (err) {
         failure(res, err)
     }
@@ -107,7 +104,7 @@ router.get('/getProductsList/', async function (req, res, next) {
  * 分页查询商品列表
  * GET /api/products/getProductsListByPage
  */
-router.get('/getProductsListByPage/', async function (req, res, next) {
+router.get('/getProductsListByPage', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query
@@ -178,14 +175,14 @@ router.get('/getProductInfo/:id', async function (req, res, next) {
  * 新增商品
  * POST /api/products/addProductInfo
  */
-router.post('/addProductInfo/', async function (req, res, next) {
+router.post('/addProductInfo', async function (req, res, next) {
     try {
         const body = filterBody(req)
         const specList = eval(req.body.productSpecList)
         if (!specList || !specList.length) {
             return res.status(400).json({
                 status: false,
-                message: '商品规格不能为空。',
+                message: '商品规格不能为空',
             });
         }
         const productInfo = await product.create(body)
@@ -231,7 +228,7 @@ router.put('/updateProductInfo/:id', async function (req, res, next) {
         if (!specList || !specList.length) {
             return res.status(400).json({
                 status: false,
-                message: '商品规格不能为空。',
+                message: '商品规格不能为空',
             });
         }
         await productSpec.destroy({

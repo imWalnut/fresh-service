@@ -17,14 +17,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '优惠券名称必须存在。'
+          msg: '优惠券名称必须存在'
         },
         notEmpty: {
-          msg: '优惠券名称不能为空。'
+          msg: '优惠券名称不能为空'
         },
         len: {
           args: [2, 20],
-          msg: '优惠券名称长度需要在2 ~ 20个字符之间。'
+          msg: '优惠券名称长度需要在2 ~ 20个字符之间'
         }
       }
     },
@@ -33,20 +33,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '优惠金额必须存在。'
+          msg: '优惠金额必须存在'
         },
         notEmpty: {
-          msg: '优惠金额不能为空。'
+          msg: '优惠金额不能为空'
         }
       }
     },
     condition: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.INTEGER
     },
     remark: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

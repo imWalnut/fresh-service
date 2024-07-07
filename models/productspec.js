@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            models.productSpec.belongsTo(models.product, {foreignKey: 'productId', as: 'productSpecList'});
+            models.productSpec.belongsTo(models.product, {foreignKey: 'productId'});
             models.productSpec.hasMany(models.cart, {foreignKey: 'productSpecId', as: 'productSpecInfo'});
         }
     }
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 len: {
                     args: [1, 10],
-                    msg: '规格名称长度需要在1 ~ 10个字符之间。'
+                    msg: '规格名称长度需要在1 ~ 10个字符之间'
                 }
             }
         },
@@ -73,8 +73,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         remark: {
-            type: DataTypes.STRING,
-            allowNull: true
+            type: DataTypes.STRING
         },
     }, {
         sequelize,

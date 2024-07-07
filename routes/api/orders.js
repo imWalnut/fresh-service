@@ -7,8 +7,6 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
@@ -125,14 +123,14 @@ async function updateStock(orderProduct) {
  * 查询订单列表
  * GET /api/orders/getOrderList
  */
-router.get('/getOrderList/', async function (req, res, next) {
+router.get('/getOrderList', async function (req, res, next) {
     try {
         const condition = {
             ...getCondition(),
             order: [['createdAt', 'DESC']]
         }
         const orders = await order.findAll(condition)
-        success(res, '查询订单列表成功。', orders);
+        success(res, '查询订单列表成功', orders);
     } catch (err) {
         failure(res, err)
     }
@@ -142,7 +140,7 @@ router.get('/getOrderList/', async function (req, res, next) {
  * 分页查询订单列表
  * GET /api/orders/getOrderListByPage
  */
-router.get('/getOrderListByPage/', async function (req, res, next) {
+router.get('/getOrderListByPage', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query
@@ -219,14 +217,14 @@ router.get('/getOrderInfo/:id', async function (req, res, next) {
  * 新增订单
  * POST /api/orders/addOrderInfo
  */
-router.post('/addOrderInfo/', async function (req, res, next) {
+router.post('/addOrderInfo', async function (req, res, next) {
     try {
         const body = filterBody(req)
         const orderProductList = eval(req.body.orderProductList)
         if (!orderProductList || !orderProductList.length) {
             return res.status(400).json({
                 status: false,
-                message: '商品不能为空。',
+                message: '商品不能为空',
             });
         }
         body.status = 0

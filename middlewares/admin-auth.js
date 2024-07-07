@@ -6,7 +6,7 @@ const {success, failure} = require('../utils/responses');
 module.exports = async (req, res, next) => {
     try {
         // 判断 Token 是否存在
-        const {token} = req.headers;
+        const token = req.headers.authorization;
         if (!token) {
             throw new UnauthorizedError('当前接口需要认证才能访问')
         }
@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
         // 查询一下，当前用户
         const userInfo = await user.findByPk(userId);
         if (!userInfo) {
-            throw new UnauthorizedError('用户不存在。')
+            throw new UnauthorizedError('用户不存在')
         }
 
         req.user = userInfo

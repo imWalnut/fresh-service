@@ -23,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '手机号码必须存在。'
+          msg: '手机号码必须存在'
         },
         notEmpty: {
-          msg: '手机号码不能为空。'
+          msg: '手机号码不能为空'
         },
         is: {
           args: /^1((34[0-8])|(8\d{2})|(([0-35-9]|4|66|7|9)\d{1}))\d{7}$/i,
@@ -34,54 +34,123 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '邮箱必须存在。'
-        },
-        notEmpty: {
-          msg: '邮箱不能为空。'
-        },
-        isEmail: {
-          msg: '请输入正确的邮箱格式。'
-        },
-      }
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '姓名必须存在。'
+          msg: '姓名必须存在'
         },
         notEmpty: {
-          msg: '姓名不能为空。'
+          msg: '姓名不能为空'
         },
         len: {
           args: [2, 10],
-          msg: '姓名长度需要在2 ~ 10个字符之间。'
+          msg: '姓名长度需要在2 ~ 10个字符之间'
         }
       }
     },
     sex: {
       type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: true
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '性别必须存在'
+        },
+        notEmpty: {
+          msg: '性别不能为空'
+        },
+        isIn: {
+          args: [[0, 1]],
+          msg: "只能为0，1"  // 0男 1女
+        }
+      }
+    },
+    provinceCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '省份编码必须存在'
+        },
+        notEmpty: {
+          msg: '省份编码不能为空'
+        }
+      }
+    },
+    provinceName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '省份名称必须存在'
+        },
+        notEmpty: {
+          msg: '省份名称不能为空'
+        }
+      }
+    },
+    cityCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '城市编码必须存在'
+        },
+        notEmpty: {
+          msg: '城市编码不能为空'
+        }
+      }
+    },
+    cityName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '城市名称必须存在'
+        },
+        notEmpty: {
+          msg: '城市名称不能为空'
+        }
+      }
+    },
+    countyCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '县/区编码必须存在'
+        },
+        notEmpty: {
+          msg: '县/区编码不能为空'
+        }
+      }
+    },
+    countyName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '县/区名称必须存在'
+        },
+        notEmpty: {
+          msg: '县/区名称不能为空'
+        }
+      }
     },
     address: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '地址必须存在。'
+          msg: '地址必须存在'
         },
         notEmpty: {
-          msg: '地址不能为空。'
+          msg: '地址不能为空'
         },
         len: {
-          args: [10, 50],
-          msg: '地址长度需要在10 ~ 50个字符之间。'
+          args: [2, 50],
+          msg: '地址长度需要在2 ~ 50个字符之间'
         }
       }
     },
@@ -98,10 +167,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '密码必须存在。'
+          msg: '密码必须存在'
         },
         notEmpty: {
-          msg: '密码不能为空。'
+          msg: '密码不能为空'
         },
         set(value) {
           let validate = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/
@@ -118,14 +187,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: '用户名必须存在。'
+          msg: '用户名必须存在'
         },
         notEmpty: {
-          msg: '用户名不能为空。'
+          msg: '用户名不能为空'
         },
         len: {
           args: [4, 12],
-          msg: '用户名需要在4 ~ 12个字符之间。'
+          msg: '用户名需要在4 ~ 12个字符之间'
         }
       }
     },
@@ -134,24 +203,23 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     images: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT
     },
     shopName: {
       type: DataTypes.STRING
     },
     remark: {
-      type: DataTypes.STRING,
-      allowNull: true
+      type: DataTypes.STRING
     },
     status: {
       type: DataTypes.TINYINT.UNSIGNED,
       allowNull: false,
       validate: {
         notNull: {
-          msg: '状态必须存在。'
+          msg: '状态必须存在'
         },
         notEmpty: {
-          msg: '状态不能为空。'
+          msg: '状态不能为空'
         },
         isIn: {
           args: [[0, 1]],

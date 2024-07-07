@@ -7,8 +7,6 @@ const {success, failure} = require('../../utils/responses');
 
 /**
  * 公共方法：白名单过滤
- * @param req
- * @returns {{password, address, phoneNumber: (string|*), name, userName: (string|*), idNumber: (string|*), email: (string|*)}}
  */
 function filterBody(req) {
     return {
@@ -29,7 +27,7 @@ async function getSpecInfo(req) {
 
     // 如果没有找到，就抛出异常
     if (!specInfo) {
-        throw new NotFoundError(`ID: ${id}的规格未找到。`)
+        throw new NotFoundError(`ID: ${id}的规格未找到`)
     }
 
     return specInfo;
@@ -55,7 +53,7 @@ router.get('/getSpecList', async function (req, res, next) {
  * 分页查询规格列表
  * GET /api/specs/getSpecListByPage
  */
-router.get('/getSpecListByPage/', async function (req, res, next) {
+router.get('/getSpecListByPage', async function (req, res, next) {
     try {
         // 分页信息
         const query = req.query

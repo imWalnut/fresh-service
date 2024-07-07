@@ -14,10 +14,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       name: {
         type: Sequelize.STRING,
         allowNull: false
@@ -26,6 +22,30 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
         type: Sequelize.TINYINT.UNSIGNED
+      },
+      provinceCode: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      provinceName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      cityCode: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      cityName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      countyCode: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      countyName: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       address: {
         type: Sequelize.STRING,
@@ -53,16 +73,14 @@ module.exports = {
         allowNull: true
       },
       images: {
-        type: Sequelize.STRING(1000),
-        allowNull: true
+        type: Sequelize.TEXT
       },
       shopName: {
         type: Sequelize.STRING,
         allowNull: true
       },
       remark: {
-        type: Sequelize.STRING,
-        allowNull: true
+        type: Sequelize.STRING(1000)
       },
       status: {
         allowNull: false,
