@@ -74,13 +74,13 @@ router.get('/getSpecListByPage', async function (req, res, next) {
             };
         }
         const {count, rows} = await spec.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '分页查询规格列表成功', {
-            specs: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

@@ -76,13 +76,13 @@ router.get('/getCouponListByPage', async function (req, res, next) {
             };
         }
         const {count, rows} = await coupon.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '分页查询优惠券列表成功', {
-            coupons: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)
@@ -220,13 +220,13 @@ router.get('/getUserCouponListByPage', async function (req, res, next) {
             };
         }
         const {count, rows} = await userCoupon.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '分页查询用户优惠券列表成功', {
-            userCoupons: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

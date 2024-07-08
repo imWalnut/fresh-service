@@ -187,13 +187,13 @@ router.get('/getOrderListByPage', async function (req, res, next) {
             };
         }
         const {count, rows} = await order.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '查询订单列表成功', {
-            orders: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

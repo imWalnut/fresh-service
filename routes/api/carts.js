@@ -87,13 +87,13 @@ router.get('/getCartListByPage/:id', async function (req, res, next) {
             ...getCondition()
         }
         const {count, rows} = await cart.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '分页查询购物车列表成功', {
-            carts: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

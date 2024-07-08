@@ -49,11 +49,6 @@ function getCondition() {
                 model: group,
                 as: 'groupInfo',
                 attributes: ['id', 'name', 'remark']
-            },
-            {
-                model: category,
-                as: 'categoryInfo',
-                attributes: ['id', 'name', 'imgUrl', 'remark']
             }
         ]
     }
@@ -145,13 +140,13 @@ router.get('/getProductsListByPage', async function (req, res, next) {
             }
         }
         const {count, rows} = await product.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '查询商品列表成功', {
-            products: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

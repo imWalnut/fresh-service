@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {category, banner, product} = require('../../models')
+const {category, banner, product, productSpec, group} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -79,19 +79,35 @@ router.get('/getProductsListByPage', async function (req, res, next) {
         const offset = (currentPage - 1) * pageSize
         const condition = {
             order: [['soldAmount', 'DESC']],
-            attributes: ['id', 'name', 'mainImage'],
+            attributes: ['id', 'name', 'mainImage', 'soldAmount'],
             limit: pageSize,
             offset: offset,
-            distinct: true
+            distinct: true,
+            include: [
+                {
+                    model: productSpec,
+                    attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
+                },
+                {
+                    model: group,
+                    as: 'groupInfo',
+                    attributes: ['id', 'name', 'remark']
+                },
+                {
+                    model: category,
+                    as: 'categoryInfo',
+                    attributes: ['id', 'name', 'imgUrl', 'remark']
+                }
+            ]
         }
         const {count, rows} = await product.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '查询商品列表成功', {
-            products: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

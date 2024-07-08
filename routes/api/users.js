@@ -101,14 +101,30 @@ router.get('/getUsersListByPage', async function (req, res, next) {
                 }
             };
         }
+
+        if (query.status) {
+            condition.where = {
+                status: {
+                    [Op.eq]: query.status
+                }
+            };
+        }
+
+        if (query.role) {
+            condition.where = {
+                role: {
+                    [Op.eq]: query.role
+                }
+            };
+        }
         const {count, rows} = await user.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '查询用户列表成功', {
-            users: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)

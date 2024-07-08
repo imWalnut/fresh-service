@@ -75,13 +75,13 @@ router.get('/getGroupListByPage', async function (req, res, next) {
             };
         }
         const {count, rows} = await group.findAndCountAll(condition)
+        const totalPages = Math.ceil(count / pageSize)
         success(res, '分页查询分组列表成功', {
-            groups: rows,
-            pagination: {
-                total: count,
-                currentPage,
-                pageSize,
-            }
+            data: rows,
+            total: count,
+            totalPages,
+            currentPage,
+            pageSize,
         });
     } catch (err) {
         failure(res, err)
