@@ -73,7 +73,7 @@ module.exports = {
         allowNull: true
       },
       images: {
-        type: Sequelize.TEXT
+        type: Sequelize.JSON
       },
       shopName: {
         type: Sequelize.STRING,

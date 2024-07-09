@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {category, banner, product, productSpec, group} = require('../../models')
-const {Op} = require('sequelize')
+const {category, banner, product, productSpec, group, productGroup} = require('../../models')
+const {Op, where} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
 
@@ -16,18 +16,58 @@ async function getChildNeeds(rootNeeds) {
                 parentId: item.id
             },
             attributes: ['id', 'name', 'imgUrl', 'parentId', 'remark'],
-            raw: true
         }))
     })
     let child = await Promise.all(expendPromise);
     for (let [idx, item] of child.entries()) {
-        if (item.length > 0) {
-            item = await getChildNeeds(item);
-        }
         rootNeeds[idx].child = item;
     }
     return rootNeeds;
 }
+
+async function getChildProducts(groupList) {
+    let arr = []
+    groupList.forEach(item => {
+        arr.push(productGroup.findAll({
+            where: {
+                groupId: item.id
+            },
+            limit: 2,
+            attributes: ['id'],
+            include: [
+                {
+                    model: product,
+                    attributes: ['id', 'name', 'mainImage'],
+                }
+            ]
+        }))
+    })
+    let child = await Promise.all(arr)
+    for (let [idx, item] of child.entries()) {
+        groupList[idx].child = item;
+    }
+    return groupList
+}
+
+/**
+ * 查询首页分类
+ * GET /visitor/base/getHomeCategoryList
+ */
+router.get('/getHomeCategoryList', async function (req, res, next) {
+    try {
+        let categoryList = await category.findAll({
+            where: {
+                parentId: 0
+            },
+            limit: 10,
+            attributes: ['id', 'name', 'imgUrl', 'parentId'],
+            raw: true
+        })
+        success(res, '查询分类列表成功', categoryList);
+    } catch (err) {
+        failure(res, err)
+    }
+});
 
 /**
  * 查询分类列表
@@ -39,11 +79,47 @@ router.get('/getCategoryList', async function (req, res, next) {
             where: {
                 parentId: 0
             },
+            limit: 10,
             attributes: ['id', 'name', 'imgUrl', 'parentId'],
             raw: true
         })
         rootNeeds = await getChildNeeds(rootNeeds);
         success(res, '查询分类列表成功', rootNeeds);
+    } catch (err) {
+        failure(res, err)
+    }
+});
+
+/**
+ * 查询首页分组列表
+ * GET /visitor/base/getHomeGroupList
+ */
+router.get('/getHomeGroupList', async function (req, res, next) {
+    try {
+        const condition = {
+            attributes: ['id', 'name', 'remark'],
+            limit: 4,
+            raw: true
+        }
+        let groupList = await group.findAll(condition)
+        groupList = await getChildProducts(groupList)
+        success(res, '查询分组列表成功', groupList);
+    } catch (err) {
+        failure(res, err)
+    }
+});
+
+/**
+ * 查询分组列表
+ * GET /visitor/base/getGroupList
+ */
+router.get('/getGroupList', async function (req, res, next) {
+    try {
+        const condition = {
+            attributes: ['id', 'name', 'remark']
+        }
+        let groupList = await group.findAll(condition)
+        success(res, '查询分组列表成功', groupList);
     } catch (err) {
         failure(res, err)
     }
@@ -89,15 +165,15 @@ router.get('/getProductsListByPage', async function (req, res, next) {
                     attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
                 },
                 {
-                    model: group,
-                    as: 'groupInfo',
-                    attributes: ['id', 'name', 'remark']
+                    model: productGroup,
+                    // attributes: ['id', 'name', 'remark']
+                    include: [
+                        {
+                            model: group,
+                            attributes: ['id', 'name', 'remark']
+                        }
+                    ]
                 },
-                {
-                    model: category,
-                    as: 'categoryInfo',
-                    attributes: ['id', 'name', 'imgUrl', 'remark']
-                }
             ]
         }
         const {count, rows} = await product.findAndCountAll(condition)

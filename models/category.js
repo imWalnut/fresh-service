@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   class category extends Model {
     /**
@@ -10,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      models.category.hasMany(models.product, {foreignKey: 'categoryId', as: 'categoryInfo'});
+      models.category.hasMany(models.product, {foreignKey: 'categoryId'});
     }
   }
   category.init({
@@ -42,6 +43,23 @@ module.exports = (sequelize, DataTypes) => {
         },
         isUrl: {
           msg: "图片地址格式错误"
+        }
+      }
+    },
+    commission: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '提成比例必须存在'
+        },
+        notEmpty: {
+          msg: '提成比例不能为空'
+        },
+        isGreaterThan0AndLessThan100(value) {
+          if (value < 0 || value >= 100) {
+            throw new Error('提成比例应大于等于0小于100');
+          }
         }
       }
     },

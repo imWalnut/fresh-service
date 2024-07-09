@@ -14,7 +14,7 @@ module.exports = {
         allowNull: false
       },
       subImages: {
-        type: Sequelize.TEXT
+        type: Sequelize.JSON
       },
       mainImage: {
         type: Sequelize.STRING(1000),
@@ -25,10 +25,6 @@ module.exports = {
         allowNull: false
       },
       categoryId: {
-        type: Sequelize.BIGINT,
-        allowNull: false
-      },
-      groupId: {
         type: Sequelize.BIGINT,
         allowNull: false
       },
@@ -46,6 +42,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
         allowNull: false
+      },
+      deposit: {
+        type: Sequelize.DECIMAL(10, 2)
       },
       status: {
         allowNull: false,

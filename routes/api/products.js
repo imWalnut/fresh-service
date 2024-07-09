@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {product, productSpec, group, category} = require('../../models')
+const {product, productSpec, group, category, productGroup} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -15,7 +15,6 @@ function filterBody(req) {
         mainImage: req.body.mainImage,
         productCode: req.body.productCode,
         categoryId: req.body.categoryId,
-        groupId: req.body.groupId,
         stockAlarmAmount: req.body.stockAlarmAmount,
         stockAmount: req.body.stockAmount,
         soldAmount: req.body.soldAmount,
@@ -46,9 +45,18 @@ function getCondition() {
                 attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
             },
             {
-                model: group,
-                as: 'groupInfo',
-                attributes: ['id', 'name', 'remark']
+                model: productGroup,
+                // attributes: ['id', 'name', 'remark']
+                include: [
+                    {
+                        model: group,
+                        attributes: ['id', 'name', 'remark']
+                    }
+                ]
+            },
+            {
+                model: category,
+                attributes: ['id', 'name', 'imgUrl', 'remark']
             }
         ]
     }
@@ -71,7 +79,6 @@ async function getProductInfo(req) {
         throw new NotFoundError(`ID: ${id}的商品未找到`)
     }
 
-    delete productInfo.dataValues.groupId
     delete productInfo.dataValues.categoryId
 
     return productInfo;
@@ -132,13 +139,13 @@ router.get('/getProductsListByPage', async function (req, res, next) {
             }
         }
 
-        if (query.groupId) {
-            condition.where = {
-                groupId: {
-                    [Op.eq]: query.groupId
-                }
-            }
-        }
+        // if (query.groupId) {
+        //     condition.where = {
+        //         groupId: {
+        //             [Op.eq]: query.groupId
+        //         }
+        //     }
+        // }
         const {count, rows} = await product.findAndCountAll(condition)
         const totalPages = Math.ceil(count / pageSize)
         success(res, '查询商品列表成功', {
@@ -173,6 +180,8 @@ router.get('/getProductInfo/:id', async function (req, res, next) {
 router.post('/addProductInfo', async function (req, res, next) {
     try {
         const body = filterBody(req)
+
+        // 新增规格
         const specList = eval(req.body.productSpecList)
         if (!specList || !specList.length) {
             return res.status(400).json({
@@ -187,11 +196,27 @@ router.post('/addProductInfo', async function (req, res, next) {
                 productId: productInfo.id
             }
         })
-        const fields = Object.keys(specBody[0])
+        const specFields = Object.keys(specBody[0])
         await productSpec.bulkCreate(specBody, {
             ignoreDuplicates: true,
-            fields: fields
+            fields: specFields
         })
+
+        // 新增分组
+        const groupList = eval(req.body.productGroupList)
+        if (groupList && groupList.length) {
+            const groupBody = groupList.map(item => {
+                return {
+                    groupId: item,
+                    productId: productInfo.id
+                }
+            })
+            const groupFields = Object.keys(groupBody[0])
+            await productGroup.bulkCreate(groupBody, {
+                ignoreDuplicates: true,
+                fields: groupFields
+            })
+        }
         success(res, '新增商品成功', {id: productInfo.id}, 201);
     } catch (err) {
         failure(res, err)

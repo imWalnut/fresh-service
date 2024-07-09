@@ -34,7 +34,7 @@ module.exports = {
         allowNull: false
       },
       specPrice: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
       orderId: {
@@ -42,7 +42,7 @@ module.exports = {
         allowNull: false
       },
       totalPrice: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
       quantity: {

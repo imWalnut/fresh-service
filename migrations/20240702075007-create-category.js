@@ -20,6 +20,10 @@ module.exports = {
       parentId: {
         type: Sequelize.BIGINT
       },
+      commission: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       remark: {
         type: Sequelize.STRING(1000)
       },

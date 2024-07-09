@@ -13,6 +13,7 @@ function filterBody(req) {
         name: req.body.name,
         imgUrl: req.body.imgUrl,
         parentId: req.body.parentId,
+        commission: req.body.commission,
         remark: req.body.remark
     }
 }

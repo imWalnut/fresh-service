@@ -203,7 +203,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     images: {
-      type: DataTypes.TEXT
+      type: DataTypes.JSON
     },
     shopName: {
       type: DataTypes.STRING

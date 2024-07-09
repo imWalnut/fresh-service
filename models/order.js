@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     userCouponId: DataTypes.BIGINT,
     paymentType: DataTypes.INTEGER,
     payment: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notNull: {
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    postage: DataTypes.INTEGER,
+    postage: DataTypes.DECIMAL(10, 2),
     sendTime: DataTypes.DATE,
     endTime: DataTypes.DATE,
     closeTime: DataTypes.DATE,

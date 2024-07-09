@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {group, product} = require('../../models')
+const {group, productGroup} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError, BadRequestError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -108,7 +108,7 @@ router.post('/addGroupInfo', async function (req, res, next) {
  */
 router.delete('/deleteGroupInfo/:id', async function (req, res, next) {
     try {
-        const count = await product.count({
+        const count = await productGroup.count({
             where: {
                 groupId: req.params.id
             }

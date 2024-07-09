@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.product.hasMany(models.productSpec, {foreignKey: 'productId'});
-      models.product.belongsTo(models.group, {foreignKey: 'groupId', as: 'groupInfo'});
-      models.product.belongsTo(models.category, {foreignKey: 'categoryId', as: 'categoryInfo'});
+      models.product.hasMany(models.productGroup, {foreignKey: 'productId'});
+      models.product.belongsTo(models.category, {foreignKey: 'categoryId'});
     }
   }
   product.init({
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     subImages: {
-      type: DataTypes.TEXT
+      type: DataTypes.JSON
     },
     mainImage: {
       type: DataTypes.STRING,
@@ -78,18 +78,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    groupId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '商品分组必须存在'
-        },
-        notEmpty: {
-          msg: '商品分组不能为空'
-        }
-      }
-    },
     stockAlarmAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -126,6 +114,9 @@ module.exports = (sequelize, DataTypes) => {
           msg: '已售数量不能为空'
         }
       }
+    },
+    deposit: {
+      type: DataTypes.DECIMAL(10, 2)
     },
     status: {
       type: DataTypes.TINYINT.UNSIGNED,

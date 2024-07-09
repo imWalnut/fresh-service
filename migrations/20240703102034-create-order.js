@@ -25,10 +25,10 @@ module.exports = {
         defaultValue: 0
       },
       payment: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL(10, 2)
       },
       postage: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DECIMAL(10, 2)
       },
       sendTime: {
         type: Sequelize.DATE

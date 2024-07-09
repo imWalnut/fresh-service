@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     specPrice: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notNull: {
@@ -111,7 +111,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     totalPrice: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notNull: {
