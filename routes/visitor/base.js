@@ -50,6 +50,59 @@ async function getChildProducts(groupList) {
 }
 
 /**
+ * 公共方法：关联商品、商品规格、商品分组、商品分类
+ * @returns {{include: [{as: string, attributes: string[]}], attributes: {exclude: string[]}}}
+ */
+function getCondition() {
+    return {
+        include: [
+            {
+                model: productSpec,
+                attributes: ['id', 'specName', 'specRemark', 'quantity', 'price', 'remark']
+            },
+            {
+                model: productGroup,
+                include: [
+                    {
+                        model: group,
+                        attributes: ['id', 'name', 'remark']
+                    }
+                ]
+            },
+            {
+                model: category,
+                attributes: ['id', 'name', 'imgUrl', 'parentId', 'remark']
+            }
+        ]
+    }
+}
+
+/**
+ * 公共方法：查询商品
+ */
+async function getProductInfo(req) {
+    // 获取商品 ID
+    const {id} = req.params;
+
+    const condition = {
+        attributes: ['id', 'name', 'mainImage', 'soldAmount', 'productCode', 'subImages', 'stockAmount', 'deposit', 'remark'],
+        ...getCondition(),
+    };
+
+    // 查询商品
+    const productInfo = await product.findByPk(id, condition);
+
+    // 如果没有找到，就抛出异常
+    if (!productInfo) {
+        throw new NotFoundError(`ID: ${id}的商品未找到`)
+    }
+
+    delete productInfo.dataValues.categoryId
+
+    return productInfo;
+}
+
+/**
  * 查询首页分类
  * GET /visitor/base/getHomeCategoryList
  */
@@ -159,6 +212,7 @@ router.get('/getProductsListByPage', async function (req, res, next) {
             limit: pageSize,
             offset: offset,
             distinct: true,
+            where: {},
             include: [
                 {
                     model: productSpec,
@@ -176,6 +230,13 @@ router.get('/getProductsListByPage', async function (req, res, next) {
                 },
             ]
         }
+        if (query.categoryId) {
+            condition.where = {
+                categoryId: {
+                    [Op.eq]: query.categoryId
+                }
+            }
+        }
         const {count, rows} = await product.findAndCountAll(condition)
         const totalPages = Math.ceil(count / pageSize)
         success(res, '查询商品列表成功', {
@@ -185,6 +246,37 @@ router.get('/getProductsListByPage', async function (req, res, next) {
             currentPage,
             pageSize,
         });
+    } catch (err) {
+        failure(res, err)
+    }
+});
+
+/**
+ * 查询商品详情
+ * GET /visitor/base/getProductInfo/:id
+ */
+router.get('/getProductInfo/:id', async function (req, res, next) {
+    try {
+        let productInfo = await getProductInfo(req);
+        const condition = {
+            limit: 4,
+            attributes: ['id', 'name', 'mainImage', 'soldAmount', 'productCode', 'subImages', 'stockAmount', 'deposit', 'remark'],
+            where: {
+                categoryId: {
+                    [Op.eq]: productInfo.category.id
+                },
+                id: {
+                    [Op.ne]: productInfo.id
+                }
+            },
+            ...getCondition()
+        }
+        let similarProducts = await product.findAll(condition)
+        const data = {
+            productInfo,
+            similarProducts
+        }
+        success(res, '查询商品成功', data);
     } catch (err) {
         failure(res, err)
     }
