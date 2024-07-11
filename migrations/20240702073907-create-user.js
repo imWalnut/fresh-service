@@ -14,51 +14,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      sex: {
-        allowNull: false,
-        defaultValue: 0,
-        type: Sequelize.TINYINT.UNSIGNED
-      },
-      provinceCode: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      provinceName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      cityCode: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      cityName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      countyCode: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      countyName: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       role: {
         allowNull: false,
         defaultValue: 0,
         type: Sequelize.TINYINT.UNSIGNED
-      },
-      inviteBy: {
-        type: Sequelize.STRING,
-        allowNull: true
       },
       userName: {
         type: Sequelize.STRING,
@@ -72,10 +31,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      images: {
-        type: Sequelize.JSON
-      },
-      shopName: {
+      openId: {
         type: Sequelize.STRING,
         allowNull: true
       },

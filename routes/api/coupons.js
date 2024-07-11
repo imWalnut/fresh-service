@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {coupon, userCoupon, user} = require('../../models')
+const {coupon, userCoupon, user, authority} = require('../../models')
 const {Op} = require('sequelize')
 const {NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
@@ -204,8 +204,13 @@ router.get('/getUserCouponListByPage', async function (req, res, next) {
             include: [
                 {
                     model: user,
-                    as: 'couponUserInfo',
-                    attributes: ['id', 'phoneNumber', 'name', 'sex', 'provinceCode', 'provinceName', 'cityCode', 'cityName', 'countyCode', 'countyName', 'address', 'shopName', 'role']
+                    attributes: ['id', 'phoneNumber', 'role', 'userName'],
+                    include: [
+                        {
+                            model: authority,
+                            attributes: ['id', 'name', 'sex', 'images', 'shopName', 'status']
+                        }
+                    ],
                 }
             ],
             limit: pageSize,

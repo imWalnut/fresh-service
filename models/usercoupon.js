@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      models.userCoupon.belongsTo(models.user, {foreignKey: 'userId', as: 'couponUserInfo'});
+      models.userCoupon.belongsTo(models.user, {foreignKey: 'userId'});
     }
   }
   userCoupon.init({

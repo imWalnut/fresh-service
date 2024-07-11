@@ -2,24 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('banners', {
+    await queryInterface.createTable('invites', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      userId: {
+        allowNull: false,
         type: Sequelize.BIGINT
       },
-      imgUrl: {
-        type: Sequelize.STRING(1000),
-        allowNull: false
-      },
-      hrefUrl: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      source: {
-        type: Sequelize.TINYINT.UNSIGNED,
-        allowNull: false
+      invitedBy: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -30,8 +26,13 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    await queryInterface.addIndex(
+        'invites', {
+          fields: ['userId'],  // 要索引的字段
+          unique: true,        // 唯一索引
+        });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('banners');
+    await queryInterface.dropTable('invites');
   }
 };

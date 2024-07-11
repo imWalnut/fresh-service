@@ -1,11 +1,38 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
+const crypto = require('crypto');
 const {user} = require('../../models');
 const {Op} = require('sequelize');
 const {BadRequestError, UnauthorizedError, NotFoundError} = require('../../utils/errors');
 const {success, failure} = require('../../utils/responses');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
+
+let cachedAccessToken
+let accessTokenExpiresAt = 0
+
+/**
+ *公共方法 获取微信token
+ */
+
+async function getAccessToken() {
+    if (cachedAccessToken && (Date.now() < accessTokenExpiresAt)) {
+        return cachedAccessToken
+    }
+    // 获取token
+    const resClient = await axios.get("https://api.weixin.qq.com/cgi-bin/token", {
+        params: configClient
+    })
+
+    const accessToken = resClient.data.access_token
+
+    cachedAccessToken = accessToken
+
+    accessTokenExpiresAt = Date.now() + (7200 * 1000)
+
+    return accessToken
+}
 
 /**
  * 用户登录
@@ -13,44 +40,90 @@ const jwt = require('jsonwebtoken');
  */
 router.post('/signIn', async (req, res) => {
     try {
-        const {login, password} = req.body;
+        const {code, encryptedData, iv} = req.body;
 
-        if (!login) {
-            throw new BadRequestError('手机号/用户名必须填写');
+        const configAuthority = {
+            appid: '',
+            secret: '',
+            code,
+            grant_type: 'authorization_code'
         }
 
-        if (!password) {
-            throw new BadRequestError('密码必须填写');
+        const configClient = {
+            appid: '',
+            secret: '',
+            grant_type: 'client_credential'
         }
 
-        const condition = {
-            where: {
-                [Op.or]: [
-                    {phoneNumber: login},
-                    {username: login}
-                ]
+        let openId
+
+        if (!code) {
+            throw new BadRequestError('没有code参数');
+        }
+
+        if (!encryptedData) {
+            throw new BadRequestError('没有code参数');
+        }
+
+        if (!iv) {
+            throw new BadRequestError('没有code参数');
+        }
+
+        // 获取openid
+        const resAuthority = await axios.get("https://api.weixin.qq.com/sns/jscode2session", {
+            params: configAuthority
+        })
+
+        if (resAuthority.data.errcode) {
+            throw new BadRequestError('非法的用户凭证');
+        }
+        openId = resAuthority.data.openid
+
+        let data
+
+        const userInfo = await user.findOne({where: {openId: openId}})
+
+        if (userInfo) {
+            data = userInfo
+        } else {
+            const accessToken = await getAccessToken()
+            // 获取手机号
+            const response = await axios.get(`https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=${accessToken}`, {
+                code: code
+            })
+
+            const phoneNumber = response.data
+
+            const userByPhoneNUmber = await user.findOne({where: {phoneNumber: phoneNumber}})
+
+            if (userByPhoneNUmber) {
+                userByPhoneNUmber.openId = openId
+                await userByPhoneNUmber.save()
+                data = userByPhoneNUmber
+            } else {
+                const body = {
+                    phoneNumber: phoneNumber,
+                    role: 2,
+                    password: phoneNumber,
+                    userName: 'htg' + crypto.randomBytes(8) + phoneNumber.slice(-4),
+                    status: 0,
+                    openId: openId,
+                }
+                data = await user.create(body)
             }
-        };
-
-        // 通过手机号或username，查询用户是否存在
-        const userInfo = await user.findOne(condition);
-        if (!userInfo) {
-            throw new NotFoundError('用户不存在，无法登录');
-        }
-        // 验证密码
-        const isPasswordValid = bcrypt.compareSync(password, userInfo.password);
-        if (!isPasswordValid) {
-            throw new UnauthorizedError('密码错误');
         }
 
         // 生成身份验证令牌
         const token = jwt.sign({
-                userId: userInfo.id,
-                role: userInfo.role
+                userId: data.id,
+                role: data.role
             }, process.env.SECRET, {expiresIn: '1d'}
         );
 
-        success(res, '登录成功', {token});
+        success(res, '登录成功', {
+            data,
+            token
+        });
     } catch (error) {
         failure(res, error);
     }

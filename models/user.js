@@ -13,8 +13,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       models.user.hasMany(models.cart, {foreignKey: 'userId', as: 'userInfo'});
-      models.user.hasMany(models.userCoupon, {foreignKey: 'userId', as: 'couponUserInfo'});
+      models.user.hasMany(models.userCoupon, {foreignKey: 'userId'});
       models.user.hasMany(models.order, {foreignKey: 'userId', as: 'orderUserInfo'});
+      models.user.hasMany(models.address, {foreignKey: 'userId'});
+      models.user.hasMany(models.authority, {foreignKey: 'userId'});
+      models.user.hasMany(models.invite, {foreignKey: 'userId'});
     }
   }
   user.init({
@@ -34,132 +37,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '姓名必须存在'
-        },
-        notEmpty: {
-          msg: '姓名不能为空'
-        },
-        len: {
-          args: [2, 10],
-          msg: '姓名长度需要在2 ~ 10个字符之间'
-        }
-      }
-    },
-    sex: {
-      type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '性别必须存在'
-        },
-        notEmpty: {
-          msg: '性别不能为空'
-        },
-        isIn: {
-          args: [[0, 1]],
-          msg: "只能为0，1"  // 0男 1女
-        }
-      }
-    },
-    provinceCode: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '省份编码必须存在'
-        },
-        notEmpty: {
-          msg: '省份编码不能为空'
-        }
-      }
-    },
-    provinceName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '省份名称必须存在'
-        },
-        notEmpty: {
-          msg: '省份名称不能为空'
-        }
-      }
-    },
-    cityCode: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '城市编码必须存在'
-        },
-        notEmpty: {
-          msg: '城市编码不能为空'
-        }
-      }
-    },
-    cityName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '城市名称必须存在'
-        },
-        notEmpty: {
-          msg: '城市名称不能为空'
-        }
-      }
-    },
-    countyCode: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '县/区编码必须存在'
-        },
-        notEmpty: {
-          msg: '县/区编码不能为空'
-        }
-      }
-    },
-    countyName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '县/区名称必须存在'
-        },
-        notEmpty: {
-          msg: '县/区名称不能为空'
-        }
-      }
-    },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: '地址必须存在'
-        },
-        notEmpty: {
-          msg: '地址不能为空'
-        },
-        len: {
-          args: [2, 50],
-          msg: '地址长度需要在2 ~ 50个字符之间'
-        }
-      }
-    },
     role: {
       type: DataTypes.TINYINT.UNSIGNED,
-      allowNull: true
-    },
-    inviteBy: {
-      type: DataTypes.STRING,
       allowNull: true
     },
     password: {
@@ -202,11 +81,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
-    images: {
-      type: DataTypes.JSON
-    },
-    shopName: {
-      type: DataTypes.STRING
+    openId: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     remark: {
       type: DataTypes.STRING
